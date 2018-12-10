@@ -6,29 +6,35 @@
 /*   By: jkellehe <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/12/09 18:00:15 by jkellehe          #+#    #+#             */
-/*   Updated: 2018/12/09 22:56:28 by jkellehe         ###   ########.fr       */
+/*   Updated: 2018/12/10 15:14:49 by jkellehe         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include <sys/types.h>
 #include <sys/uio.h>
+#include <sys/stat.h>
 #include <unistd.h>
 #include <stdlib.h>
 #include <math.h>
 #include <stdio.h>
+#include <fcntl.h>
 #include "libft/libft.h"
+
 
 typedef struct s_ap			t_flags;
 
 struct			s_ap
 {
 	uint8_t		fd;
+	uint8_t		ret;
 	char *file;
-	uint64_t *five_twelve;
-	char *M;
-	int *s;
+	uint64_t *chunky;
+	uint64_t chunks;
+	uint32_t *M;
+	uint32_t *s;
 	uint32_t *K;
 	uint64_t orig_len;
+	uint64_t curr_len;
 	uint32_t a_fin;
 	uint32_t b_fin;
 	uint32_t c_fin;
