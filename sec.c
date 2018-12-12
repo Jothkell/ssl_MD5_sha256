@@ -79,12 +79,12 @@ void print_binary_string(char *message, int len)
 void	ft_pad(char *buf, t_flags *f)
 {
   char *hold;
-  uint8_t *buff;
+  char *buff;
 
-  f->orig_len += 24;
-  buff = (uint8_t*)buf;
+  f->orig_len += (f->ret * 8);
+  buff = buf;
   hold = (char*)&f->orig_len;
-  buff[f->ret++] = 128;
+  buff[f->ret++] = -128;
   while (f->ret < 56)
     {
       buff[f->ret] = 0;
@@ -188,7 +188,7 @@ void	initi(t_flags *f)
 
 char        *ft_md5(t_flags *f)
 {
-  char buf[65];
+  char buf[64];
   char *catch;
 
   f->s = ft_make_s();
@@ -204,20 +204,20 @@ char        *ft_md5(t_flags *f)
   f->d_fin += f->d;
   f->orig_len += 512;
     }
-  if (f->ret != 0)
+  if (f->ret >= 0)
     ft_pad(buf, f);
   catch = append(f);
-  ft_putmd5(catch);
+  ft_putmd5(catch, f);
   return (catch);
 }
 
-void	ft_putmd5(char *catch)
+void	ft_putmd5(char *catch, t_flags *f)
 {
   int i;
 
   i = 0;
   
-  printf("MD5 (test) = "); 
+  printf("MD5 (%s) = ", f->file); 
   while (i < 16)
   {
     printf("%02hhx", (unsigned char)catch[i]);
@@ -234,6 +234,7 @@ int main(int argc, char **argv)
 
   i = 0;
   f = malloc(sizeof(t_flags));
+  f->file = argv[1];
   initi(f);
   f->fd = open(argv[1], O_RDONLY);
    ft_md5(f);
@@ -241,5 +242,4 @@ int main(int argc, char **argv)
   
 
   printf("\n");
-  //printf("%x %x %x %x\n", hold[0], hold[1], hold[2], hold[3]);
 }

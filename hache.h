@@ -25,7 +25,7 @@ typedef struct s_ap			t_flags;
 
 struct			s_ap
 {
-	uint8_t		fd;
+	uint32_t       	fd;
 	int		ret;
 	char *file;
 	uint32_t *M;
@@ -45,4 +45,4 @@ struct			s_ap
 
 
 void    inner_rounds(t_flags *f);
-void    ft_putmd5(char *catch); 
+void    ft_putmd5(char *catch, t_flags *f); 
