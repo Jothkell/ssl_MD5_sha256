@@ -80,30 +80,39 @@ void	ft_pad(char *buf, t_flags *f)
 {
   char *hold;
   char *buff;
+  int debug = 0;
 
+  debug = ft_strlen(buf);
   f->orig_len += (f->ret * 8);
   buff = buf;
   hold = (char*)&f->orig_len;
   buff[f->ret++] = -128;
-  while (f->ret < 56)
+  while (f->ret != 56 && f->ret != 120)
     {
       buff[f->ret] = 0;
       f->ret++;
+      debug++;
     }
 
-  while(f->ret < 64)
+  while((f->ret % 64) != 0)
     {
       buff[f->ret] = *hold;
       hold++;
       f->ret++;
+      debug++;
     }
-  f->M = (uint32_t*)buff;
-  print_binary_string((char*)buff, 64);
-  inner_rounds(f);
-  f->a_fin += f->a;
-  f->b_fin += f->b;
-  f->c_fin += f->c;
-  f->d_fin += f->d;
+  print_binary_string((char*)buff, 128);
+  while (f->ret)
+    {
+      f->M = (uint32_t*)buff;
+      inner_rounds(f);
+      f->a_fin += f->a;
+      f->b_fin += f->b;
+      f->c_fin += f->c;
+      f->d_fin += f->d;
+      f->ret -= 64;
+      buff+=4;
+    }
 }
 
 uint32_t        *ft_make_s(void)
@@ -188,7 +197,7 @@ void	initi(t_flags *f)
 
 char        *ft_md5(t_flags *f)
 {
-  char buf[64];
+  char buf[128];
   char *catch;
 
   f->s = ft_make_s();
