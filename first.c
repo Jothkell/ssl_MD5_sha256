@@ -207,9 +207,9 @@ void	inner_rounds(t_flags *f)
 		F = (i >= 0 && i <= 15) ? ((f->b & f->c) | ((~f->b) & f->d)) : (F);
 		g = (i >= 0 && i <= 15) ? (i) : (g);
 		F = (i >= 16 && i <= 31) ? ((f->d & f->b) | ((~f->d) & f->c)) : (F);
-		g = (i >= 16 && i <= 31) ? (5 * i + 1) : (g);
+		g = (i >= 16 && i <= 31) ? ((5 * i + 1) % 16) : (g);
 		F = (i >= 32 && i <= 47) ? (f->b ^ f->c ^ f->d) : (F);
-		g = (i >= 32 && i <= 47) ? (3 * i + 5) : (g);
+		g = (i >= 32 && i <= 47) ? ((3 * i + 5) % 16) : (g);
 		F = (i >= 48 && i <= 63) ? (f->c ^ (f->b | (~f->d))) : (F);
 		g = (i >= 48 && i <= 63) ? ((7 * i) % 16) : (g);
 		F = F + f->a + f->K[i] + f->M[g];
@@ -254,7 +254,6 @@ uint32_t	*ft_md5(t_flags *f)
 	f->s = ft_make_s();
 	f->K = ft_make_k();
 
-	f->a_fin = 0x67452301; f->b_fin = 0xefcdab89; f->c_fin = 0x98badcfe; f->d_fin = 0x10325476;
 	ft_pad(f);//pads up the file
 	f->chunky = (uint64_t*)f->file;
 	while(pos < f->chunks) //for every 512 chunk, i is in 64 byte increments, orig_len is in bytes

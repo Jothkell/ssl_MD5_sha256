@@ -28,13 +28,11 @@ struct			s_ap
 	uint8_t		fd;
 	uint8_t		ret;
 	char *file;
-	uint64_t *chunky;
-	uint64_t chunks;
 	uint32_t *M;
 	uint32_t *s;
 	uint32_t *K;
-	uint64_t orig_len;
-	uint64_t curr_len;
+  	uint32_t orig_len;
+
 	uint32_t a_fin;
 	uint32_t b_fin;
 	uint32_t c_fin;
@@ -44,3 +42,6 @@ struct			s_ap
 	uint32_t c;
 	uint32_t d;
 };
+
+
+void    inner_rounds(t_flags *f);
