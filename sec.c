@@ -50,24 +50,55 @@ uint32_t *ft_make_k(void)
   return (k);
 }
 
+void print_binary_variable(uint64_t variable, int size)
+{
+  int i;
+  char hold;
+
+  i = size;
+  while (--i >= 0)
+    {
+      hold = 1;
+      (variable & (hold << i)) ? (write(1, "1", 1)) : (write(1, "0", 1));
+      (i % 4 == 0) ? (write(1, " ", 1)) : (0);
+    }
+}
+
+void print_binary_string(char *message, int len)
+{
+  int i;
+
+  i = -1;
+  while (++i < len)
+    {
+      print_binary_variable(message[i], 8);
+      printf("%d   \n", i);
+    }
+}
+
 void	ft_pad(char *buf, t_flags *f)
 {
   char *hold;
+  uint8_t *buff;
 
+  f->orig_len += 24;
+  buff = (uint8_t*)buf;
   hold = (char*)&f->orig_len;
-  buf[f->ret] = 128;
+  buff[f->ret++] = 128;
   while (f->ret < 56)
     {
-      buf[f->ret] = 0;
+      buff[f->ret] = 0;
       f->ret++;
     }
 
   while(f->ret < 64)
     {
-      buf[f->ret] = *hold;
+      buff[f->ret] = *hold;
       hold++;
       f->ret++;
     }
+  f->M = (uint32_t*)buff;
+  print_binary_string((char*)buff, 64);
   inner_rounds(f);
   f->a_fin += f->a;
   f->b_fin += f->b;
@@ -103,7 +134,7 @@ char *append(t_flags *f)
   int i;
 
   i = 0;
-  hold = malloc(sizeof(char) * 17);
+  hold = malloc(sizeof(uint32_t) * 4);
   hold[0] = f->a_fin;
   hold[1] = f->b_fin;
   hold[2] = f->c_fin;
@@ -157,7 +188,7 @@ void	initi(t_flags *f)
 
 char        *ft_md5(t_flags *f)
 {
-  char *buf;
+  char buf[65];
   char *catch;
 
   f->s = ft_make_s();
@@ -171,11 +202,27 @@ char        *ft_md5(t_flags *f)
   f->b_fin += f->b;
   f->c_fin += f->c;
   f->d_fin += f->d;
+  f->orig_len += 512;
     }
   if (f->ret != 0)
     ft_pad(buf, f);
   catch = append(f);
+  ft_putmd5(catch);
   return (catch);
+}
+
+void	ft_putmd5(char *catch)
+{
+  int i;
+
+  i = 0;
+  
+  printf("MD5 (test) = ");
+  while (i < 16)
+  {
+    printf("%02hhx", (unsigned char)catch[i]);
+    i++;
+  }
 }
 
 int main(int argc, char **argv)
@@ -183,18 +230,16 @@ int main(int argc, char **argv)
   t_flags *f;
   char *catch;
   int i;
+  uint32_t *hold;
 
   i = 0;
   f = malloc(sizeof(t_flags));
   initi(f);
   f->fd = open(argv[1], O_RDONLY);
-  catch = ft_md5(f);
+   ft_md5(f);
   
-  while (i < 16)
-    {
-      printf("02%hhx", catch[i]);
-      i++;
-    }
-  printf("\n");
+  
 
+  printf("\n");
+  //printf("%x %x %x %x\n", hold[0], hold[1], hold[2], hold[3]);
 }
