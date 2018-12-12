@@ -217,7 +217,7 @@ void	ft_putmd5(char *catch)
 
   i = 0;
   
-  printf("MD5 (test) = ");
+  printf("MD5 (test) = "); 
   while (i < 16)
   {
     printf("%02hhx", (unsigned char)catch[i]);

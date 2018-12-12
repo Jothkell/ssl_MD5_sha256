@@ -45,4 +45,4 @@ struct			s_ap
 
 
 void    inner_rounds(t_flags *f);
-void    ft_putmd5(char *catch);
+void    ft_putmd5(char *catch); 
