@@ -32,17 +32,32 @@ struct			s_ap
 	uint32_t *s;
 	uint32_t *K;
   	uint64_t orig_len;
-
+ 	uint8_t i;
 	uint32_t a_fin;
 	uint32_t b_fin;
 	uint32_t c_fin;
 	uint32_t d_fin;
+  	uint32_t e_fin;
+  	uint32_t f_fin;
+  	uint32_t g_fin;
+  	uint32_t h_fin;
 	uint32_t a;
 	uint32_t b;
 	uint32_t c;
 	uint32_t d;
+  	uint32_t e;
+  	uint32_t f;
+  	uint32_t g;
+  	uint32_t h;
+  uint32_t ch;
+  uint32_t temp1;
+  uint32_t maj;
+  uint32_t temp2;
+  uint32_t *w;
 };
 
 
-void    inner_rounds(t_flags *f);
+void    md5_hash(t_flags *f);
 void    ft_putmd5(char *catch, t_flags *f); 
+void    ft_pad(char *buf, t_flags *f);
+void            sha_256(t_flags *f);

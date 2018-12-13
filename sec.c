@@ -79,40 +79,27 @@ void print_binary_string(char *message, int len)
 void	ft_pad(char *buf, t_flags *f)
 {
   char *hold;
-  char *buff;
   int debug = 0;
 
-  debug = ft_strlen(buf);
   f->orig_len += (f->ret * 8);
-  buff = buf;
   hold = (char*)&f->orig_len;
-  buff[f->ret++] = -128;
+  buf[f->ret++] = -128;
   while (f->ret != 56 && f->ret != 120)
     {
-      buff[f->ret] = 0;
+      buf[f->ret] = 0;
       f->ret++;
       debug++;
     }
-
+  
   while((f->ret % 64) != 0)
     {
-      buff[f->ret] = *hold;
+      buf[f->ret] = *hold;
       hold++;
       f->ret++;
       debug++;
     }
-  print_binary_string((char*)buff, 128);
-  while (f->ret)
-    {
-      f->M = (uint32_t*)buff;
-      inner_rounds(f);
-      f->a_fin += f->a;
-      f->b_fin += f->b;
-      f->c_fin += f->c;
-      f->d_fin += f->d;
-      f->ret -= 64;
-      buff+=4;
-    }
+  print_binary_string((char*)buf, f->ret);
+
 }
 
 uint32_t        *ft_make_s(void)
@@ -151,7 +138,7 @@ char *append(t_flags *f)
   return ((char*)hold);
 }
 
-void    inner_rounds(t_flags *f)
+void    md5_hash(t_flags *f)
 {
   uint32_t i;
   uint32_t F;
@@ -184,6 +171,7 @@ void    inner_rounds(t_flags *f)
 
 void	initi(t_flags *f)
 {
+  f->i = 0;
   f->orig_len = 0;
   f->a_fin = 0x67452301;
   f->b_fin = 0xefcdab89;
@@ -197,7 +185,7 @@ void	initi(t_flags *f)
 
 char        *ft_md5(t_flags *f)
 {
-  char buf[128];
+  char buf[130];
   char *catch;
 
   f->s = ft_make_s();
@@ -206,15 +194,28 @@ char        *ft_md5(t_flags *f)
   while(64 == (f->ret = read(f->fd, buf, 64)))
     {
   f->M = (uint32_t*)buf;
-  inner_rounds(f);
+  md5_hash(f);
   f->a_fin += f->a;
   f->b_fin += f->b;
   f->c_fin += f->c;
   f->d_fin += f->d;
   f->orig_len += 512;
     }
-  if (f->ret >= 0)
+
+  int debug = ft_strlen(buf);
+  if (f->ret > 0)
     ft_pad(buf, f);
+  while (f->i < f->ret)
+    {
+      f->M = (uint32_t*)&buf[f->i];
+      md5_hash(f);
+      f->a_fin += f->a;
+      f->b_fin += f->b;
+      f->c_fin += f->c;
+      f->d_fin += f->d;
+      f->i += 64;
+      //f->ret -= 64;
+    }
   catch = append(f);
   ft_putmd5(catch, f);
   return (catch);
@@ -246,8 +247,8 @@ int main(int argc, char **argv)
   f->file = argv[1];
   initi(f);
   f->fd = open(argv[1], O_RDONLY);
-   ft_md5(f);
-  
+  //ft_md5(f);
+  sha_256(f);
   
 
   printf("\n");
