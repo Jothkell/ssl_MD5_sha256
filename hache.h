@@ -25,9 +25,15 @@ typedef struct s_ap			t_flags;
 
 struct			s_ap
 {
+  void (*alg) (t_flags *f);
 	uint32_t       	fd;
 	int		ret;
 	char *file;
+  uint8_t p;
+  uint8_t q;
+  uint8_t r;
+  uint8_t s;
+
 	uint32_t *M;
 	uint32_t *s;
 	uint32_t *K;
@@ -54,9 +60,11 @@ struct			s_ap
   uint32_t maj;
   uint32_t temp2;
   uint32_t *w;
+  uint32_t b_ind;
 };
 
-
+void	accumulate(t_flags *f);
+void    sha_initi(t_flags *f);
 void    md5_hash(t_flags *f);
 void    ft_putmd5(char *catch, t_flags *f); 
 void    ft_pad(char *buf, t_flags *f);

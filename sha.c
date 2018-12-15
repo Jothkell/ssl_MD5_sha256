@@ -18,12 +18,12 @@ void    sha_initi(t_flags *f)
   f->orig_len = 0;
   f->a_fin = 0x6a09e667;
   f->b_fin = 0xbb67ae85;
-  f->c_fin = 0x3c6ef372;
-  f->d_fin = 0xa54ff53a;
-  f->e_fin = 0x510e527f;
-  f->f_fin = 0x9b05688c;
-  f->g_fin = 0x1f83d9ab;
-  f->h_fin = 0x5be0cd19;
+    f->c_fin = 0x3c6ef372;
+    f->d_fin = 0xa54ff53a;
+    f->e_fin = 0x510e527f;
+    f->f_fin = 0x9b05688c;
+    f->g_fin = 0x1f83d9ab;
+    f->h_fin = 0x5be0cd19;
 }
 
 
@@ -61,26 +61,24 @@ void		zero(uint32_t *w)
     }
 }
 
-void	sha_copy(uint32_t *w, char *buf)
+void	sha_copy(char *w, char *buf)
 {
   int i = 0;
   int j = 3;
-  int run = 1;
+  int ja = 0;
 
-  while (run)
+  while (i < 64)
     {
+
       w[i] = buf[j];
       i++;
+      if ((i % 4) == 0)
+	{
+	  j += 8;
+	}
       j--;
-      if (j == 0)
-	j = 7;
-      else if (j == 4)
-	j = 11;
-      else if (j == 8)
-	j = 15;
-      else if (j == 12)
-	run = 0;
     }
+
 }
 
 uint32_t rR(uint32_t w, uint32_t r)
@@ -88,7 +86,7 @@ uint32_t rR(uint32_t w, uint32_t r)
   return(((w >> r) | (w << (32 - r))));
 }
 
-void	sha_expand(uint32_t *w)
+int	sha_expand(uint32_t *w)
 {
   int i = 16;
   uint32_t s0;
@@ -97,11 +95,12 @@ void	sha_expand(uint32_t *w)
   while (i < 64)
     {
       
-      s0 = (rR(w[(i - 15)], 7) ^ rR(w[(i - 15)], 18) ^ rR(w[(i - 15)], 3));
-      s1 = (rR(w[(i - 2)], 17) ^ rR(w[(i - 2)], 19) ^ rR(w[(i - 2)], 10));
+      s0 = (rR(w[(i - 15)], 7) ^ rR(w[(i - 15)], 18) ^ (w[(i - 15)] >> 3));
+      s1 = (rR(w[(i - 2)], 17) ^ rR(w[(i - 2)], 19) ^ (w[(i - 2)] >> 10));
       w[i] = w[(i - 16)] + s0 + w[(i - 7)] + s1;
       i++;
     }
+  return (1);
 }
 
 void		sha_init_abc(t_flags *f)
@@ -142,6 +141,8 @@ void		sha256_hash(t_flags *f)
       f->a = f->temp1 + f->temp2;
       i++;
     }
+  accumulate(f);
+  printf("%u %u %u %u %u %u %u %u\n", f->a_fin, f->b_fin, f->c_fin, f->d_fin, f->e_fin, f->f_fin, f->g_fin, f->h_fin);
 }
 
 char *sha_append(t_flags *f)
@@ -163,15 +164,39 @@ char *sha_append(t_flags *f)
 void	print256(char *p)
 {
   int i;
+  unsigned int *hold;
 
-  i = 0;
-  
-  while (i < 32)
+  i = 31;
+  while (i >= 0)
     {
       printf("%02hhx", p[i]);
-      i++;
+      i--;
     }
 
+  printf("\n");
+
+}
+
+void		printW(uint32_t *w)
+{
+  int i;
+  i = 0;
+  while (i < 16)
+    {
+      printf("%x %d\n", w[i], i);
+      i++;
+    }
+}
+
+void            printSW(uint32_t *w)
+{
+  int i;
+  i = 0;
+  while (i < 64)
+    {
+      printf("%x %d\n", w[i], i);
+      i++;
+    }
 }
 
 void		sha_256(t_flags *f)
@@ -187,30 +212,22 @@ void		sha_256(t_flags *f)
   f->w = w;
   while(64 == (f->ret = read(f->fd, buf, 64)))
     {
-      sha_copy(w, buf);
+      sha_copy((char*)w, buf);
       sha_expand(w);
       sha256_hash(f);
-      f->a_fin += f->a;
-      f->b_fin += f->b;
-      f->c_fin += f->c;
-      f->d_fin += f->d;
-      f->e_fin += f->e;
-      f->f_fin += f->f;
-      f->g_fin += f->g;
-      f->h_fin += f->h;
+      f->orig_len += 512;
     }
   if (f->ret > 0) 
     ft_pad(buf, f);
-  sha_copy(w, buf);
-  sha_expand(w);
-  sha256_hash(f);
-  f->a_fin += f->a;
-  f->b_fin += f->b;
-  f->c_fin += f->c;
-  f->d_fin += f->d;
-  f->e_fin += f->e;
-  f->f_fin += f->f;
-  f->g_fin += f->g;
-  f->h_fin += f->h;
+
+  while(f->i < f->ret)
+    {
+      sha_copy((char*)w, &buf[f->i]);
+      printW(w);
+      sha_expand(w);
+      printSW(w);
+	f->i += 64;
+    sha256_hash(f);
+    }
   print256(sha_append(f));
 }

@@ -75,6 +75,39 @@ void print_binary_string(char *message, int len)
       printf("%d   \n", i);
     }
 }
+void	l_ind(char *hold, char *buf, t_flags *f)
+{
+  while((f->ret % 64) != 0)
+    {
+      buf[f->ret] = *hold;
+      hold++;
+      f->ret++;
+    }
+}
+
+void	b_ind(char *hold, char *buf, t_flags *f)
+{
+  int j = 7;
+
+  while ((f->ret % 64) != 0)
+    {
+      buf[f->ret] = hold[j];
+      f->ret++;
+      hold--;
+    }
+}
+
+void	accumulate(t_flags *f)
+{
+  f->a_fin += f->a;
+  f->b_fin += f->b;
+  f->c_fin += f->c;
+  f->d_fin += f->d;
+  f->e_fin += f->e;
+  f->f_fin += f->f;
+  f->g_fin += f->g;
+  f->h_fin += f->h;
+}
 
 void	ft_pad(char *buf, t_flags *f)
 {
@@ -90,15 +123,11 @@ void	ft_pad(char *buf, t_flags *f)
       f->ret++;
       debug++;
     }
-  
-  while((f->ret % 64) != 0)
-    {
-      buf[f->ret] = *hold;
-      hold++;
-      f->ret++;
-      debug++;
-    }
-  print_binary_string((char*)buf, f->ret);
+  if (f->b_ind == 1)
+    b_ind(hold, buf, f);
+  else
+    l_ind(hold, buf, f);
+  //print_binary_string((char*)buf, f->ret);
 
 }
 
@@ -183,7 +212,7 @@ void	initi(t_flags *f)
   f->d = 0x10325476;
 }
 
-char        *ft_md5(t_flags *f)
+void        ft_md5(t_flags *f)
 {
   char buf[130];
   char *catch;
@@ -235,6 +264,55 @@ void	ft_putmd5(char *catch, t_flags *f)
   }
 }
 
+
+void	handler(t_flags *f)
+{
+  printf("usage: ft_ssl command [command opts] [command args]\n");
+}
+
+void	optns(t_flags *f, char **argv)
+{
+  char *op[] = {"md5", "sha256", "sha224", "sha512", "sha524", NULL};
+  void (f[]) (t_flags *f) = {ft_md5, sha_256, NULL
+  };
+  int j;
+
+  j = 0;
+  f->i++;
+  while (op[j] != NULL)
+    {
+      if (ft_strcmp(op[j], argv[f->i]) == 0)
+	f->alg = f[j];
+      j++;
+    }
+}
+
+void	ft_stdin(t_flags *f, char **argv)
+{
+
+}
+
+void	parse(t_flags *f, char **argv)
+{
+  f->i = 0;
+  while(argv[i] != NULL)
+    {
+      if (ft_strcmp(argv[f->i], "-a") == 0)
+	optns(f, argv);
+      else if (ft_strcmp(argv[f->i], "-p") == 0 && (f->p == 1))
+	ft_stdin();
+      else if (ft_strcmp(argv[f->i], "-q") == 0 && (f->p == 1))
+	;
+      else if (ft_strcmp(argv[f->i], "-r") == 0 && (f->p == 1))
+	;
+      else if (ft_strcmp(argv[f->i], "-s") == 0 && (f->p == 1))
+	;
+      else
+	f->fd = open(argv[1], O_RDONLY);
+      f->i++;
+    }
+}
+
 int main(int argc, char **argv)
 {
   t_flags *f;
@@ -242,11 +320,15 @@ int main(int argc, char **argv)
   int i;
   uint32_t *hold;
 
+  argv[argc] = NULL;
   i = 0;
+  (argc == 1) ? (handler(f)) : (0);
+  parse(f);
   f = malloc(sizeof(t_flags));
   f->file = argv[1];
-  initi(f);
+  sha_initi(f);
   f->fd = open(argv[1], O_RDONLY);
+  f->b_ind = 1;
   //ft_md5(f);
   sha_256(f);
   
