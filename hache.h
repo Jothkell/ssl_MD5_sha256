@@ -20,6 +20,7 @@
 #include <fcntl.h>
 #include "libft/libft.h"
 
+# define TWO_FIFTY(c) (c != 3 && c != 4)
 
 typedef struct s_ap			t_flags;
 
@@ -32,11 +33,12 @@ struct			s_ap
   uint8_t p;
   uint8_t q;
   uint8_t r;
-  uint8_t s;
-
+  //uint8_t s;
+  uint8_t det;
 	uint32_t *M;
 	uint32_t *s;
-	uint32_t *K;
+	uint64_t *K;
+  uint32_t *k;
   	uint64_t orig_len;
  	uint8_t i;
 	uint32_t a_fin;
@@ -61,6 +63,8 @@ struct			s_ap
   uint32_t temp2;
   uint32_t *w;
   uint32_t b_ind;
+
+
 };
 
 void	accumulate(t_flags *f);

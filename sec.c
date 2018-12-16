@@ -188,7 +188,7 @@ void    md5_hash(t_flags *f)
       g = (i >= 32 && i <= 47) ? ((3 * i + 5) % 16) : (g);
       F = (i >= 48 && i <= 63) ? (f->c ^ (f->b | (~f->d))) : (F);
       g = (i >= 48 && i <= 63) ? ((7 * i) % 16) : (g);
-      F = F + f->a + f->K[i] + f->M[g];
+      F = F + f->a + f->k[i] + f->M[g];
       f->a = f->d;
       f->d = f->c;
       f->c = f->b;
@@ -218,7 +218,7 @@ void        ft_md5(t_flags *f)
   char *catch;
 
   f->s = ft_make_s();
-  f->K = ft_make_k();
+  f->k = ft_make_k();
 
   while(64 == (f->ret = read(f->fd, buf, 64)))
     {
@@ -247,7 +247,6 @@ void        ft_md5(t_flags *f)
     }
   catch = append(f);
   ft_putmd5(catch, f);
-  return (catch);
 }
 
 void	ft_putmd5(char *catch, t_flags *f)
@@ -265,7 +264,7 @@ void	ft_putmd5(char *catch, t_flags *f)
 }
 
 
-void	handler(t_flags *f)
+/*void	handler(t_flags *f)
 {
   printf("usage: ft_ssl command [command opts] [command args]\n");
 }
@@ -312,7 +311,7 @@ void	parse(t_flags *f, char **argv)
       f->i++;
     }
 }
-
+*/
 int main(int argc, char **argv)
 {
   t_flags *f;
@@ -322,14 +321,15 @@ int main(int argc, char **argv)
 
   argv[argc] = NULL;
   i = 0;
-  (argc == 1) ? (handler(f)) : (0);
-  parse(f);
+  //(argc == 1) ? (handler(f)) : (0);
+  //parse(f);
   f = malloc(sizeof(t_flags));
   f->file = argv[1];
   sha_initi(f);
   f->fd = open(argv[1], O_RDONLY);
   f->b_ind = 1;
   //ft_md5(f);
+  f->det = 2;
   sha_256(f);
   
 
