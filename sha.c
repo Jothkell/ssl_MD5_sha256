@@ -231,3 +231,4 @@ void		sha_256(t_flags *f)
     }
   print256(sha_append(f));
 }
+ 
