@@ -38,7 +38,7 @@ struct			s_ap
 	uint32_t *M;
 	uint32_t *s;
 	uint64_t *K;
-  uint32_t *k;
+  //uint32_t *k;
   	uint64_t orig_len;
  	uint8_t i;
 	uint32_t a_fin;
@@ -57,7 +57,28 @@ struct			s_ap
   	uint32_t f;
   	uint32_t g;
   	uint32_t h;
-  uint32_t ch;
+  uint64_t W;
+  uint64_t h0;
+  uint64_t h1;
+  uint64_t h2;
+  uint64_t h3;
+  uint64_t h4;
+  uint64_t h5;
+  uint64_t h6;
+  uint64_t h7;
+  uint64_t one; //a
+  uint64_t two; //b
+  uint64_t three; //c
+  uint64_t four; //d
+  uint64_t five; //e
+  uint64_t six; //f
+  uint64_t seven; //g
+  uint64_t eight; //h
+  uint64_t cha;
+  uint64_t t1;
+  uint64_t t2;
+  uint64_t mj;
+  uint32_t nine;
   uint32_t temp1;
   uint32_t maj;
   uint32_t temp2;

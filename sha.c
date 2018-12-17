@@ -24,6 +24,16 @@ void    sha_initi(t_flags *f)
     f->f_fin = 0x9b05688c;
     f->g_fin = 0x1f83d9ab;
     f->h_fin = 0x5be0cd19;
+    f->h0 = 0x6a09e667f3bcc908;
+    f->h1 = 0xbb67ae8584caa73b;
+    f->h2 = 0x3c6ef372fe94f82b;
+    f->h3 = 0xa54ff53a5f1d36f1;
+    f->h4 = 0x510e527fade682d1;
+    f->h5 = 0x9b05688c2b3e6c1f;
+    f->h6 = 0x1f83d9abfb41bd6b;
+    f->h7 = 0x5be0cd19137e2179;
+    
+    //
 }
 
 
@@ -97,7 +107,7 @@ uint32_t rR(uint32_t w, uint32_t r)
   return(((w >> r) | (w << (32 - r))));
 }
 
-int	sha_256_expand(uint32_t *w)
+/*int	sha_256_expand(uint32_t *w)
 {
   int i = 16;
   uint32_t s0;
@@ -112,7 +122,7 @@ int	sha_256_expand(uint32_t *w)
       i++;
     }
   return (1);
-}
+  }*/
 
 void		sha_init_abc(t_flags *f)
 {
@@ -124,6 +134,14 @@ void		sha_init_abc(t_flags *f)
   f->f = f->f_fin;
   f->g = f->g_fin;
   f->h = f->h_fin;
+  f->h0 = f->one;
+  f->h1 = f->two;
+  f->h2 = f->three;
+  f->h3 = f->four;
+  f->h4 = f->five;
+  f->h5 = f->six;
+  f->h6 = f->seven;
+  f->h7 = f->eight;
 }
 
 void		sub_hash(t_flags *f)
@@ -136,6 +154,15 @@ void		sub_hash(t_flags *f)
   f->c = f->b;
   f->b = f->a;
   f->a = f->temp1 + f->temp2;
+
+  f->eight = f->seven;
+  f->seven = f->six;
+  f->six = f->five;
+  f->five = f->four + f->t1;
+  f->four = f->three;
+  f->three = f->two;
+  f->two = f->one;
+  f->one = f->t1 + f->t2;
 }
 
 void		sha256_hash(t_flags *f)
@@ -163,14 +190,6 @@ void		sha256_hash(t_flags *f)
       f->maj = ((f->a & f->b) ^ (f->a & f->c) ^ (f->b & f->c));
       f->temp2 = s0 + f->maj;
       sub_hash(f);
-      /*f->h = f->g;
-      f->g = f->f;
-      f->f = f->e;
-      f->e = f->d + f->temp1;
-      f->d = f->c;
-      f->c = f->b;
-      f->b = f->a;
-      f->a = f->temp1 + f->temp2;*/
       i++;
     }
   accumulate(f);

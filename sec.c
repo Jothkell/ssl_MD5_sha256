@@ -107,6 +107,15 @@ void	accumulate(t_flags *f)
   f->f_fin += f->f;
   f->g_fin += f->g;
   f->h_fin += f->h;
+
+  f->h0 += f->one;
+  f->h1 += f->two;
+  f->h2 += f->three;
+  f->h3 += f->four;
+  f->h4 += f->five;
+  f->h5 += f->six;
+  f->h6 += f->seven;
+  f->h7 += f->eight;
 }
 
 void	ft_pad(char *buf, t_flags *f)
