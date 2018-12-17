@@ -185,7 +185,7 @@ void		sha256_hash(t_flags *f)
     {
       s1 = (rR(f->e, 6) ^ rR(f->e, 11) ^ rR(f->e, 25));
       f->ch = ((f->e & f->f) ^ ((~f->e) & f->g));
-      f->temp1 = f->h + s1 + f->ch + f->K[i] + f->w[i];
+      f->temp1 = f->h + s1 + f->ch + f->k[i] + f->w[i];
       s0 = (rR(f->a, 2) ^ rR(f->a, 13) ^ rR(f->a, 22));
       f->maj = ((f->a & f->b) ^ (f->a & f->c) ^ (f->b & f->c));
       f->temp2 = s0 + f->maj;
@@ -258,7 +258,7 @@ void		sha_256(t_flags *f)
 
 
   f->w = z_ero(w, f);
-  f->K = sha_make_k(k, f);
+  f->k = sha_make_k(k, f);
   while(64 == (f->ret = read(f->fd, buf, 64)))
     {
       sha_copy((char*)w, buf, f);

@@ -37,7 +37,7 @@ struct			s_ap
   uint8_t det;
 	uint32_t *M;
 	uint32_t *s;
-	uint64_t *K;
+	uint64_t *k;
   //uint32_t *k;
   	uint64_t orig_len;
  	uint8_t i;
@@ -57,7 +57,7 @@ struct			s_ap
   	uint32_t f;
   	uint32_t g;
   	uint32_t h;
-  uint64_t W;
+  uint64_t *W;
   uint64_t h0;
   uint64_t h1;
   uint64_t h2;
@@ -78,6 +78,7 @@ struct			s_ap
   uint64_t t1;
   uint64_t t2;
   uint64_t mj;
+  uint32_t ch;
   uint32_t nine;
   uint32_t temp1;
   uint32_t maj;
@@ -88,9 +89,20 @@ struct			s_ap
 
 };
 
+void            sha_512(t_flags *f);
+void            sha_init_abc(t_flags *f);
+void            sub_hash(t_flags *f);
+uint32_t rR(uint32_t w, uint32_t r);
+uint32_t                *z_ero(uint32_t *w, t_flags *f);
+uint64_t        *sha_make_k(uint64_t *k, t_flags *f);
 void	accumulate(t_flags *f);
 void    sha_initi(t_flags *f);
 void    md5_hash(t_flags *f);
 void    ft_putmd5(char *catch, t_flags *f); 
 void    ft_pad(char *buf, t_flags *f);
 void            sha_256(t_flags *f);
+void    sha_copy(char *w, char *buf, t_flags *f);
+void            printSW(uint32_t *w);
+void            printW(uint32_t *w);
+char *sha_append(t_flags *f);
+void    print256(char *p);

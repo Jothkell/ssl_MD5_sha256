@@ -225,9 +225,10 @@ void        ft_md5(t_flags *f)
 {
   char buf[130];
   char *catch;
+  uint64_t k[80];
 
   f->s = ft_make_s();
-  f->k = ft_make_k();
+  f->k = sha_make_k(k, f);
 
   while(64 == (f->ret = read(f->fd, buf, 64)))
     {
@@ -339,7 +340,7 @@ int main(int argc, char **argv)
   f->b_ind = 1;
   //ft_md5(f);
   f->det = 2;
-  sha_256(f);
+  sha_512(f);
   
 
   printf("\n");
