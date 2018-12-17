@@ -2,7 +2,7 @@
 /*                                                                            */
 /*                                                        :::      ::::::::   */
 /*   first.c                                            :+:      :+:    :+:   */
-/*                                                    +:+ +:+         +:+     */
+/*                                                    +:+ +:+ +:+  */
 /*   By: jkellehe <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/12/09 17:14:19 by jkellehe          #+#    #+#             */
@@ -71,7 +71,7 @@ uint64_t	*sha_make_k(uint64_t *k, t_flags *f)
 uint32_t		*z_ero(uint32_t *w, t_flags *f)
 {
   int i = 0;
-  int max = (TWO_FIFTY(f->det)) ? (64) : (80);
+  int max = (TWO_FIFTY(f->det)) ? (64) : (160);
 
   while(i < max)
     {
@@ -86,15 +86,20 @@ void	sha_copy(char *w, char *buf, t_flags *f)
   int i = 0;
   int j = (TWO_FIFTY(f->det)) ? (3) : (7);
   int ja = 0;
-  int max = (TWO_FIFTY(f->det)) ? (64) : (80);
+  int max = (TWO_FIFTY(f->det)) ? (64) : (128);
   int size = (TWO_FIFTY(f->det)) ? (4) : (8);
-  
+  int k = 0;
+  uint64_t *debug;
+  debug = (uint64_t*)w;
+
   while (i < max)
     {
       w[i] = buf[j];
       i++;
       if ((i % size) == 0)
 	{
+	  //printf("\n\n%llx %d\n\n", debug[k], k);
+	  k++;
 	  j += (size * 2);
 	}
       j--;
@@ -105,6 +110,11 @@ void	sha_copy(char *w, char *buf, t_flags *f)
 uint32_t rR(uint32_t w, uint32_t r)
 {
   return(((w >> r) | (w << (32 - r))));
+}
+
+uint64_t rR64(uint64_t w, uint64_t r)
+{
+  return(((w >> r) | (w << (64 - r))));
 }
 
 /*int	sha_256_expand(uint32_t *w)
@@ -134,14 +144,15 @@ void		sha_init_abc(t_flags *f)
   f->f = f->f_fin;
   f->g = f->g_fin;
   f->h = f->h_fin;
-  f->h0 = f->one;
-  f->h1 = f->two;
-  f->h2 = f->three;
-  f->h3 = f->four;
-  f->h4 = f->five;
-  f->h5 = f->six;
-  f->h6 = f->seven;
-  f->h7 = f->eight;
+  
+  f->one = f->h0;
+  f->two = f->h1;
+  f->three = f->h2;
+  f->four = f->h3;
+  f->five = f->h4;
+  f->six = f->h5;
+  f->seven = f->h6;
+  f->eight = f->h7;
 }
 
 void		sub_hash(t_flags *f)
@@ -193,7 +204,7 @@ void		sha256_hash(t_flags *f)
       i++;
     }
   accumulate(f);
-  printf("%u %u %u %u %u %u %u %u\n", f->a_fin, f->b_fin, f->c_fin, f->d_fin, f->e_fin, f->f_fin, f->g_fin, f->h_fin);
+  //printf("%u %u %u %u %u %u %u %u\n", f->a_fin, f->b_fin, f->c_fin, f->d_fin, f->e_fin, f->f_fin, f->g_fin, f->h_fin);
 }
 
 char *sha_append(t_flags *f)
@@ -217,7 +228,7 @@ void	print256(char *p)
   int i;
   unsigned int *hold;
 
-  i = 31;
+  i = (TWO_FIFTY(f->det)) ? (31) : (63);
   while (i >= 0)
     {
       printf("%02hhx", p[i]);
@@ -232,9 +243,13 @@ void		printW(uint32_t *w)
 {
   int i;
   i = 0;
+
+  uint64_t *hold;
+
+  hold = (uint64_t *)w;
   while (i < 16)
     {
-      printf("%x %d\n", w[i], i);
+      printf("%llx %d\n", hold[i], i);
       i++;
     }
 }
@@ -242,10 +257,12 @@ void		printW(uint32_t *w)
 void            printSW(uint32_t *w)
 {
   int i;
+  uint64_t *debug =  (uint64_t *)w;
+
   i = 0;
-  while (i < 64)
+  while (i < 80)
     {
-      printf("%x %d\n", w[i], i);
+      printf("%llx %d\n", debug[i], i);
       i++;
     }
 }

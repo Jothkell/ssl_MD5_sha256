@@ -87,13 +87,23 @@ void	l_ind(char *hold, char *buf, t_flags *f)
 
 void	b_ind(char *hold, char *buf, t_flags *f)
 {
-  int j = 7;
+  int j = (TWO_FIFTY(f->det)) ? (7) : (15);
+  int k = 0;
 
-  while ((f->ret % 64) != 0)
+  while ((f->ret % 64) != 0 && (j != 7 && k != 8))
+    {
+
+      buf[f->ret] = (TWO_FIFTY(f->det)) ? (hold[j]) : (0);
+      //printf("%hhx %d\n", buf[f->ret], f->ret);
+      f->ret++;
+      k = j;
+      j--;
+    }
+  while (0 <= j && k > 7)
     {
       buf[f->ret] = hold[j];
       f->ret++;
-      hold--;
+      j--;
     }
 }
 
@@ -116,6 +126,28 @@ void	accumulate(t_flags *f)
   f->h5 += f->six;
   f->h6 += f->seven;
   f->h7 += f->eight;
+}
+
+void    ft_64pad(char *buf, t_flags *f)
+{
+  char *hold;
+  int debug = 0;
+
+  f->orig_len += (f->ret * 8);
+  hold = (char*)&f->orig_len;
+  buf[f->ret++] = -128;
+  while (f->ret != 112 && f->ret != 240)
+    {
+      buf[f->ret] = 0;
+      f->ret++;
+      debug++;
+    }
+  if (f->b_ind == 1)
+    b_ind(hold, buf, f);
+  else
+    l_ind(hold, buf, f);
+  //print_binary_string((char*)buf, f->ret);
+
 }
 
 void	ft_pad(char *buf, t_flags *f)
@@ -339,7 +371,7 @@ int main(int argc, char **argv)
   f->fd = open(argv[1], O_RDONLY);
   f->b_ind = 1;
   //ft_md5(f);
-  f->det = 2;
+  f->det = 3;
   sha_512(f);
   
 

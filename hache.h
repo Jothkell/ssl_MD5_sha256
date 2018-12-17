@@ -89,6 +89,8 @@ struct			s_ap
 
 };
 
+uint64_t rR64(uint64_t w, uint64_t r);
+void    ft_64pad(char *buf, t_flags *f);
 void            sha_512(t_flags *f);
 void            sha_init_abc(t_flags *f);
 void            sub_hash(t_flags *f);

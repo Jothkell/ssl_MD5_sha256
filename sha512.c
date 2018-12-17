@@ -19,28 +19,33 @@ void            sha512_hash(t_flags *f)
   uint64_t s1;
 
   i = 16;
+  //printW((uint32_t*)f->W);
   while (i < 80)
     {
-      s0 = (rR(f->W[(i - 15)], 1) ^ rR(f->W[(i - 15)], 8) ^ (f->W[(i - 15)] >> 7));
-      s1 = (rR(f->W[(i - 2)], 19) ^ rR(f->W[(i - 2)], 61) ^ (f->W[(i - 2)] >> 6));
+      s0 = (rR64(f->W[(i - 15)], 1) ^ rR64(f->W[(i - 15)], 8) ^ (f->W[(i - 15)] >> 7));
+      s1 = (rR64(f->W[(i - 2)], 19) ^ rR64(f->W[(i - 2)], 61) ^ (f->W[(i - 2)] >> 6));
       f->W[i] = f->W[(i - 16)] + s0 + f->W[(i - 7)] + s1;
       i++;
     }
+  //printSW((uint32_t*)f->W);
   i = 0;
+  //printf("\n%llu %llu %llu %llu\n%llu %llu %llu %llu\n\n", f->h0, f->h1, f->h2, f->h3, f->h4, f->h5, f->h6, f->h7);
   sha_init_abc(f);//
+  //printf("\n%llu %llu %llu %llu\n%llu %llu %llu %llu\n\n", f->h0, f->h1, f->h2, f->h3, f->h4, f->h5, f->h6, f->h7);
   while (i < 80)
     {
-      s1 = (rR(f->five, 14) ^ rR(f->five, 18) ^ rR(f->five, 41));
-      f->ch = ((f->five & f->six) ^ ((~f->five) & f->seven));
+      s1 = (rR64(f->five, 14) ^ rR64(f->five, 18) ^ rR64(f->five, 41));
+      f->cha = ((f->five & f->six) ^ ((~f->five) & f->seven));
       f->t1 = f->eight + s1 + f->cha + f->k[i] + f->W[i];
-      s0 = (rR(f->one, 28) ^ rR(f->one, 34) ^ rR(f->one, 39));
+      s0 = (rR64(f->one, 28) ^ rR64(f->one, 34) ^ rR64(f->one, 39));
       f->mj = ((f->one & f->two) ^ (f->one & f->three) ^ (f->two & f->three));
-      f->t2 = s0 + f->maj;
+      f->t2 = s0 + f->mj;
       sub_hash(f);//
+      printf("\n%llu %llu %llu %llu\n%llu %llu %llu %llu\n\n", f->one, f->two, f->three, f->four, f->five, f->six, f->seven, f->eight);
       i++;
     }
   accumulate(f);
-  printf("%llu %llu %llu %llu %llu %llu %llu %llu\n", f->h0, f->h1, f->h2, f->h3, f->h4, f->h5, f->h6, f->h7);
+  //printf("\n%llu %llu %llu %llu\n%llu %llu %llu %llu\n\n", f->h0, f->h1, f->h2, f->h3, f->h4, f->h5, f->h6, f->h7);
 }
 
 void            sha_512(t_flags *f)
@@ -55,19 +60,21 @@ void            sha_512(t_flags *f)
   while(128 == (f->ret = read(f->fd, buf, 128)))
     {
       sha_copy((char*)w, buf, f);
+      //printW((uint32_t*)w);
       sha512_hash(f);
       f->orig_len += 1024;
     }
   if (f->ret > 0)
-    ft_pad(buf, f);
+    ft_64pad(buf, f);
 
   while(f->i < f->ret)
     {
       sha_copy((char*)w, &buf[f->i], f);
-      printW((uint32_t*)w);
-      printSW((uint32_t*)w);
-      f->i += 64;
+      //printW((uint32_t*)w);
+      //printSW((uint32_t*)w);
+      f->i += 128;
       sha512_hash(f);
     }
   print256(sha_append(f));
 }
+//16 bits short of 128 or 256 == 112 or 240
