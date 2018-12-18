@@ -48,6 +48,22 @@ void            sha512_hash(t_flags *f)
   //printf("\n%llu %llu %llu %llu\n%llu %llu %llu %llu\n\n", f->h0, f->h1, f->h2, f->h3, f->h4, f->h5, f->h6, f->h7);
 }
 
+int	smthing_thr(t_flags *f)
+{
+  int i;
+  int size;
+
+  size = (TWO_FIFTY(f->det)) ? (64) : (128);
+  i = 0;
+  while (f->file[i] != '\0')
+    {
+      i++;
+      if (i == size)
+	return (i);
+    }
+    return (i);
+}
+
 void            sha_512(t_flags *f)
 {
   uint64_t w[80];
@@ -57,14 +73,15 @@ void            sha_512(t_flags *f)
 
   f->W = (uint64_t*)z_ero((uint32_t*)w, f);
   f->k = sha_make_k(k, f);
-  while(128 == (f->ret = read(f->fd, buf, 128)))
+  while(128 == (f->ret = read(f->fd, buf, 128)) || (f->file && ((f->ret = smthing_thr(f)) == 128)))
     {
       sha_copy((char*)w, buf, f);
       //printW((uint32_t*)w);
       sha512_hash(f);
       f->orig_len += 1024;
+      f->file += (f->file) ? (128) : (0);
     }
-  if (f->ret > 0)
+  if (f->ret > 0)// || (f->file && f->ret))
     ft_64pad(buf, f);
 
   while(f->i < f->ret)
@@ -75,6 +92,6 @@ void            sha_512(t_flags *f)
       f->i += 128;
       sha512_hash(f);
     }
-  print256(sha_append(f));
+  print256(sha_append(f), f);
 }
 //16 bits short of 128 or 256 == 112 or 240

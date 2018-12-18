@@ -133,6 +133,7 @@ void    ft_64pad(char *buf, t_flags *f)
   char *hold;
   int debug = 0;
 
+  buf = (f->file) ? (ft_strcpy(buf, f->file)) : (buf);
   f->orig_len += (f->ret * 8);
   hold = (char*)&f->orig_len;
   buf[f->ret++] = -128;
@@ -155,6 +156,7 @@ void	ft_pad(char *buf, t_flags *f)
   char *hold;
   int debug = 0;
 
+  buf = (f->file) ? (ft_strcpy(buf, f->file)) : (buf);
   f->orig_len += (f->ret * 8);
   hold = (char*)&f->orig_len;
   buf[f->ret++] = -128;
@@ -306,26 +308,57 @@ void	ft_putmd5(char *catch, t_flags *f)
 }
 
 
-/*void	handler(t_flags *f)
+void	ft_err(t_flags *f)
 {
   printf("usage: ft_ssl command [command opts] [command args]\n");
+  //return (-1);
 }
-
-void	optns(t_flags *f, char **argv)
+/*
+int	optns(t_flags *f, char **argv)
 {
   char *op[] = {"md5", "sha256", "sha224", "sha512", "sha524", NULL};
-  void (f[]) (t_flags *f) = {ft_md5, sha_256, NULL
-  };
+  void (*fun[]) (t_flags *f) = {ft_md5, sha_256, NULL, sha_512, NULL,  NULL};
   int j;
 
-  j = 0;
-  f->i++;
-  while (op[j] != NULL)
+  j = 1;
+  while (argv[j] != NULL)
     {
-      if (ft_strcmp(op[j], argv[f->i]) == 0)
-	f->alg = f[j];
+      f->det = 0;
+      while(f->det <= 4)
+	{
+	  if (ft_strcmp(op[f->det], argv[j]) == 0)
+	    {
+	    f->alg = fun[f->det];
+	    return (1);
+	    }
+	  f->det++;
+	}
       j++;
     }
+  printf("Error: '%s' is an invalid command.\n", argv[1]);
+  return (0);
+}*/
+
+int     optns(t_flags *f, char **argv)
+{
+  char *op[] = {"md5", "sha256", "sha224", "sha512", "sha524", NULL};
+  void (*fun[]) (t_flags *f) = {ft_md5, sha_256, NULL, sha_512, NULL,  NULL};
+  int j;
+
+  j = 0;      
+  while(j <= 4)
+        {
+          if (ft_strcmp(op[j], argv[f->i]) == 0)
+            {
+	      f->det = j;
+	      f->alg = fun[j];
+	      return (1);
+            }
+          j++;
+        }
+ 
+  //printf("Error: '%s' is an invalid command.\n", argv[1]);
+  return (0);
 }
 
 void	ft_stdin(t_flags *f, char **argv)
@@ -333,46 +366,84 @@ void	ft_stdin(t_flags *f, char **argv)
 
 }
 
-void	parse(t_flags *f, char **argv)
+void	ft_flags(t_flags *f, char **argv)
 {
-  f->i = 0;
-  while(argv[i] != NULL)
+
+}
+
+void	ft_strin(t_flags *f, char **argv)
+{
+  f->i++;
+  f->file = argv[f->i];
+  f->alg(f);
+  f->file = NULL;
+}
+
+void	parse(t_flags *f, char **argv, void (**op) (t_flags *f, char **argv))
+{
+  int hold;
+
+  f->i = 1;
+  while(argv[f->i] != NULL)
     {
-      if (ft_strcmp(argv[f->i], "-a") == 0)
-	optns(f, argv);
-      else if (ft_strcmp(argv[f->i], "-p") == 0 && (f->p == 1))
-	ft_stdin();
-      else if (ft_strcmp(argv[f->i], "-q") == 0 && (f->p == 1))
-	;
-      else if (ft_strcmp(argv[f->i], "-r") == 0 && (f->p == 1))
-	;
-      else if (ft_strcmp(argv[f->i], "-s") == 0 && (f->p == 1))
-	;
-      else
-	f->fd = open(argv[1], O_RDONLY);
+      hold = f->i;
+      if (argv[f->i][0] == '-' && (hold += 1))
+	op[(argv[f->i][1])](f, argv);
+      else if (!optns(f, argv))
+	{
+	  if(1 != (f->fd = open(argv[f->i], O_RDONLY)) && !(f->i = 0))
+	    f->alg(f);
+	  else
+	    printf("%s: No such file or directory\n", argv[f->i]);
+	  f->i = hold;
+	  while(argv[++f->i] != NULL)
+	    {
+	      printf("%s: No such file or directory\n", argv[f->i]);
+	    }
+	  return ;
+	}
+      f->i = hold;
       f->i++;
     }
 }
-*/
+
+
+void	ass_op(void (**op) (t_flags *f, char **argv))
+{
+  op['p'] = ft_stdin;
+  op['q'] = ft_flags;
+  op['r'] = ft_flags;
+  op['s'] = ft_strin;
+}
+
 int main(int argc, char **argv)
 {
   t_flags *f;
   char *catch;
   int i;
   uint32_t *hold;
+  void (*op[4]) (t_flags *f, char **argv);
 
+  ass_op(op);
   argv[argc] = NULL;
   i = 0;
-  //(argc == 1) ? (handler(f)) : (0);
-  //parse(f);
+  if (argc == 1)
+    {
+      ft_err(f);
+      return(1);
+    }
   f = malloc(sizeof(t_flags));
-  f->file = argv[1];
+  //f->file = argv[1];
   sha_initi(f);
-  f->fd = open(argv[1], O_RDONLY);
   f->b_ind = 1;
+  parse(f, argv, op);
+
+  //optns(f, argv);
+  //f->fd = open(argv[1], O_RDONLY);
   //ft_md5(f);
-  f->det = 3;
-  sha_512(f);
+  //f->det = 3;
+  //f->alg(f);
+  //sha_512(f);
   
 
   printf("\n");

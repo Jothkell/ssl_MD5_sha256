@@ -32,7 +32,9 @@ void    sha_initi(t_flags *f)
     f->h5 = 0x9b05688c2b3e6c1f;
     f->h6 = 0x1f83d9abfb41bd6b;
     f->h7 = 0x5be0cd19137e2179;
-    
+    f->file = NULL;
+    f->fd = -20;
+    f->alg = ft_err;
     //
 }
 
@@ -211,19 +213,27 @@ char *sha_append(t_flags *f)
 {
   uint32_t *ret;
   
-  ret = malloc(sizeof(uint32_t) * 8);
-  ret[0] = f->h_fin;
-  ret[1] = f->g_fin;
-  ret[2] = f->f_fin;
-  ret[3] = f->e_fin;
-  ret[4] = f->d_fin;
-  ret[5] = f->c_fin;
-  ret[6] = f->b_fin;
-  ret[7] = f->a_fin;
+  ret = malloc(sizeof(uint32_t) * 16);
+  ret[0] = (TWO_FIFTY(f->det)) ? (f->h_fin) : (f->h7);
+  ret[1] = (TWO_FIFTY(f->det)) ? (f->g_fin) : (f->h7 >> 32);
+  ret[2] = (TWO_FIFTY(f->det)) ? (f->f_fin) : (f->h6);
+  ret[3] = (TWO_FIFTY(f->det)) ? (f->e_fin) : (f->h6 >> 32);
+  ret[4] = (TWO_FIFTY(f->det)) ? (f->d_fin) : (f->h5);
+  ret[5] = (TWO_FIFTY(f->det)) ? (f->c_fin) : (f->h5 >> 32);
+  ret[6] = (TWO_FIFTY(f->det)) ? (f->b_fin) : (f->h4);
+  ret[7] = (TWO_FIFTY(f->det)) ? (f->a_fin) : (f->h4 >> 32);
+  ret[8] = f->h3;
+  ret[9] = (f->h3 >> 32);
+  ret[10] = f->h2;
+  ret[11] = (f->h2 >> 32);
+  ret[12] = f->h1;
+  ret[13] = (f->h1 >> 32);
+  ret[14] = f->h0;
+  ret[15] = (f->h0 >> 32);
   return ((char*)ret);
 }
 
-void	print256(char *p)
+void	print256(char *p, t_flags *f)
 {
   int i;
   unsigned int *hold;
@@ -276,13 +286,14 @@ void		sha_256(t_flags *f)
 
   f->w = z_ero(w, f);
   f->k = sha_make_k(k, f);
-  while(64 == (f->ret = read(f->fd, buf, 64)))
+  while(64 == (f->ret = read(f->fd, buf, 64))
+	|| (f->file && ((f->ret = smthing_thr(f)) == 64)))
     {
       sha_copy((char*)w, buf, f);
       sha256_hash(f);
       f->orig_len += 512;
     }
-  if (f->ret > 0) 
+  if (f->ret > 0 || (f->file && f->ret)) 
     ft_pad(buf, f);
 
   while(f->i < f->ret)
@@ -293,6 +304,6 @@ void		sha_256(t_flags *f)
 	f->i += 64;
     sha256_hash(f);
     }
-  print256(sha_append(f));
+  print256(sha_append(f), f);
 }
  

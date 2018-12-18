@@ -89,6 +89,8 @@ struct			s_ap
 
 };
 
+void     ft_err(t_flags *f);
+int     smthing_thr(t_flags *f);
 uint64_t rR64(uint64_t w, uint64_t r);
 void    ft_64pad(char *buf, t_flags *f);
 void            sha_512(t_flags *f);
@@ -107,4 +109,4 @@ void    sha_copy(char *w, char *buf, t_flags *f);
 void            printSW(uint32_t *w);
 void            printW(uint32_t *w);
 char *sha_append(t_flags *f);
-void    print256(char *p);
+void    print256(char *p, t_flags *f);
