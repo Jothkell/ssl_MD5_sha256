@@ -30,6 +30,7 @@ struct			s_ap
 	uint32_t       	fd;
 	int		ret;
 	char *file;
+  uint32_t *K;
   uint8_t p;
   uint8_t q;
   uint8_t r;

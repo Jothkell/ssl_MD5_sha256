@@ -41,7 +41,7 @@ void            sha512_hash(t_flags *f)
       f->mj = ((f->one & f->two) ^ (f->one & f->three) ^ (f->two & f->three));
       f->t2 = s0 + f->mj;
       sub_hash(f);//
-      printf("\n%llu %llu %llu %llu\n%llu %llu %llu %llu\n\n", f->one, f->two, f->three, f->four, f->five, f->six, f->seven, f->eight);
+      //printf("\n%llu %llu %llu %llu\n%llu %llu %llu %llu\n\n", f->one, f->two, f->three, f->four, f->five, f->six, f->seven, f->eight);
       i++;
     }
   accumulate(f);
@@ -70,7 +70,7 @@ void            sha_512(t_flags *f)
   char buf[257];
   uint64_t k[80];
 
-
+  f->b_ind = 1;
   f->W = (uint64_t*)z_ero((uint32_t*)w, f);
   f->k = sha_make_k(k, f);
   while(128 == (f->ret = read(f->fd, buf, 128)) || (f->file && ((f->ret = smthing_thr(f)) == 128)))

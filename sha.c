@@ -249,6 +249,28 @@ void	print256(char *p, t_flags *f)
 
 }
 
+void            printW256(uint32_t *w)
+{
+  int i;
+  i = 0;
+  while (i < 16)
+    {
+      printf("%x %d\n", w[i], i);
+      i++;
+    }
+}
+
+void            printSW256(uint32_t *w)
+{
+  int i;
+  i = 0;
+  while (i < 64)
+    {
+      printf("%x %d\n", w[i], i);
+      i++;
+    }
+}
+
 void		printW(uint32_t *w)
 {
   int i;
@@ -270,7 +292,7 @@ void            printSW(uint32_t *w)
   uint64_t *debug =  (uint64_t *)w;
 
   i = 0;
-  while (i < 80)
+  while (i < 80)//80 for 512
     {
       printf("%llx %d\n", debug[i], i);
       i++;
@@ -283,7 +305,7 @@ void		sha_256(t_flags *f)
   char buf[130];
   uint64_t k[80]; 
 
-
+  f->b_ind = 1;
   f->w = z_ero(w, f);
   f->k = sha_make_k(k, f);
   while(64 == (f->ret = read(f->fd, buf, 64))
@@ -299,8 +321,8 @@ void		sha_256(t_flags *f)
   while(f->i < f->ret)
     {
       sha_copy((char*)w, &buf[f->i], f);
-      printW(w);
-      printSW(w);
+      //printW256(w);
+      //printSW256(w);
 	f->i += 64;
     sha256_hash(f);
     }

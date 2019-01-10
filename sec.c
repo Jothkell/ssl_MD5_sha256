@@ -88,18 +88,18 @@ void	l_ind(char *hold, char *buf, t_flags *f)
 void	b_ind(char *hold, char *buf, t_flags *f)
 {
   int j = (TWO_FIFTY(f->det)) ? (7) : (15);
-  int k = 0;
+  //int k = 0;
 
-  while ((f->ret % 64) != 0 && (j != 7 && k != 8))
+  while ((f->ret % 64) != 0 && (j != 7))// && k != 8))
     {
 
       buf[f->ret] = (TWO_FIFTY(f->det)) ? (hold[j]) : (0);
       //printf("%hhx %d\n", buf[f->ret], f->ret);
       f->ret++;
-      k = j;
+      //k = j;
       j--;
     }
-  while (0 <= j && k > 7)
+  while (0 <= j)
     {
       buf[f->ret] = hold[j];
       f->ret++;
@@ -223,6 +223,7 @@ void    md5_hash(t_flags *f)
   f->d = f->d_fin;
   while (i < 64)
     {
+      printf("%x %x %x %x\n", f->a, f->b, f->c, f->d);
       F = (i <= 15) ? ((f->b & f->c) | ((~f->b) & f->d)) : (F);
       g = (i <= 15) ? (i) : (g);
       F = (i >= 16 && i <= 31) ? ((f->d & f->b) | ((~f->d) & f->c)) : (F);
@@ -231,7 +232,7 @@ void    md5_hash(t_flags *f)
       g = (i >= 32 && i <= 47) ? ((3 * i + 5) % 16) : (g);
       F = (i >= 48 && i <= 63) ? (f->c ^ (f->b | (~f->d))) : (F);
       g = (i >= 48 && i <= 63) ? ((7 * i) % 16) : (g);
-      F = F + f->a + f->k[i] + f->M[g];
+      F = F + f->a + f->K[i] + f->M[g];
       f->a = f->d;
       f->d = f->c;
       f->c = f->b;
@@ -243,7 +244,7 @@ void    md5_hash(t_flags *f)
 
 void	initi(t_flags *f)
 {
-  f->i = 0;
+  //f->i = 0;
   f->orig_len = 0;
   f->a_fin = 0x67452301;
   f->b_fin = 0xefcdab89;
@@ -261,11 +262,13 @@ void        ft_md5(t_flags *f)
   char *catch;
   uint64_t k[80];
 
+  initi(f);
   f->s = ft_make_s();
-  f->k = sha_make_k(k, f);
-
+  f->K = ft_make_k();
+  f->b_ind = 0;
   while(64 == (f->ret = read(f->fd, buf, 64)))
     {
+      //printf("%x %x %x %x\n", f->a_fin, f->b_fin, f->c_fin, f->d_fin);
   f->M = (uint32_t*)buf;
   md5_hash(f);
   f->a_fin += f->a;
@@ -313,36 +316,11 @@ void	ft_err(t_flags *f)
   printf("usage: ft_ssl command [command opts] [command args]\n");
   //return (-1);
 }
-/*
-int	optns(t_flags *f, char **argv)
-{
-  char *op[] = {"md5", "sha256", "sha224", "sha512", "sha524", NULL};
-  void (*fun[]) (t_flags *f) = {ft_md5, sha_256, NULL, sha_512, NULL,  NULL};
-  int j;
-
-  j = 1;
-  while (argv[j] != NULL)
-    {
-      f->det = 0;
-      while(f->det <= 4)
-	{
-	  if (ft_strcmp(op[f->det], argv[j]) == 0)
-	    {
-	    f->alg = fun[f->det];
-	    return (1);
-	    }
-	  f->det++;
-	}
-      j++;
-    }
-  printf("Error: '%s' is an invalid command.\n", argv[1]);
-  return (0);
-}*/
 
 int     optns(t_flags *f, char **argv)
 {
-  char *op[] = {"md5", "sha256", "sha224", "sha512", "sha524", NULL};
-  void (*fun[]) (t_flags *f) = {ft_md5, sha_256, NULL, sha_512, NULL,  NULL};
+  char *op[] = {"md5", "sha256", "sha224", "sha512", "sha384", NULL};
+  void (*fun[]) (t_flags *f) = {ft_md5, sha_256, sha_256, sha_512, sha_512,  NULL};
   int j;
 
   j = 0;      
@@ -392,7 +370,10 @@ void	parse(t_flags *f, char **argv, void (**op) (t_flags *f, char **argv))
       else if (!optns(f, argv))
 	{
 	  if(1 != (f->fd = open(argv[f->i], O_RDONLY)) && !(f->i = 0))
-	    f->alg(f);
+	    {
+	      f->file = argv[hold];
+	    f->alg(f);	    
+	    }
 	  else
 	    printf("%s: No such file or directory\n", argv[f->i]);
 	  f->i = hold;
@@ -422,7 +403,7 @@ int main(int argc, char **argv)
   char *catch;
   int i;
   uint32_t *hold;
-  void (*op[4]) (t_flags *f, char **argv);
+  void (*op[127]) (t_flags *f, char **argv);
 
   ass_op(op);
   argv[argc] = NULL;
@@ -433,18 +414,9 @@ int main(int argc, char **argv)
       return(1);
     }
   f = malloc(sizeof(t_flags));
-  //f->file = argv[1];
   sha_initi(f);
-  f->b_ind = 1;
+  //f->b_ind = 1;
   parse(f, argv, op);
-
-  //optns(f, argv);
-  //f->fd = open(argv[1], O_RDONLY);
-  //ft_md5(f);
-  //f->det = 3;
-  //f->alg(f);
-  //sha_512(f);
-  
 
   printf("\n");
 }
