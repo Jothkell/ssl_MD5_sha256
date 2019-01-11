@@ -413,7 +413,12 @@ int main(int argc, char **argv)
       return(1);
     }
   f = malloc(sizeof(t_flags));
-  sha_initi(f);
+  //sha_initi(f);
+  f->i = 0;
+  f->orig_len = 0;
+  f->file = NULL;
+  f->fd = -20;
+  f->alg = ft_err;
   //f->b_ind = 1;
   parse(f, argv, op);
 
