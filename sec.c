@@ -88,15 +88,14 @@ void	l_ind(char *hold, char *buf, t_flags *f)
 void	b_ind(char *hold, char *buf, t_flags *f)
 {
   int j = (TWO_FIFTY(f->det)) ? (7) : (15);
-  //int k = 0;
+  int k = 0;
 
-  while ((f->ret % 64) != 0 && (j != 7))// && k != 8))
+  while ((f->ret % 64) != 0 && (j != 7))
     {
-
-      buf[f->ret] = (TWO_FIFTY(f->det)) ? (hold[j]) : (0);
+      buf[f->ret] = 0;
       //printf("%hhx %d\n", buf[f->ret], f->ret);
       f->ret++;
-      //k = j;
+      k = j;//
       j--;
     }
   while (0 <= j)
@@ -223,7 +222,7 @@ void    md5_hash(t_flags *f)
   f->d = f->d_fin;
   while (i < 64)
     {
-      printf("%x %x %x %x\n", f->a, f->b, f->c, f->d);
+      //printf("%x %x %x %x\n", f->a, f->b, f->c, f->d);
       F = (i <= 15) ? ((f->b & f->c) | ((~f->b) & f->d)) : (F);
       g = (i <= 15) ? (i) : (g);
       F = (i >= 16 && i <= 31) ? ((f->d & f->b) | ((~f->d) & f->c)) : (F);
@@ -302,7 +301,7 @@ void	ft_putmd5(char *catch, t_flags *f)
 
   i = 0;
   
-  printf("MD5 (%s) = ", f->file); 
+  printf("MD5 (%s) = ", f->name); 
   while (i < 16)
   {
     printf("%02hhx", (unsigned char)catch[i]);
@@ -371,7 +370,7 @@ void	parse(t_flags *f, char **argv, void (**op) (t_flags *f, char **argv))
 	{
 	  if(1 != (f->fd = open(argv[f->i], O_RDONLY)) && !(f->i = 0))
 	    {
-	      f->file = argv[hold];
+	      f->name = argv[hold];
 	    f->alg(f);	    
 	    }
 	  else
