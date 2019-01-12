@@ -314,6 +314,7 @@ void		sha_256(t_flags *f)
   f->b_ind = 1;
   f->w = z_ero(w, f);
   f->k = sha_make_k(k, f);
+  f->fd = (uint32_t)open("./del", O_RDONLY);
   while(64 == (f->ret = read(f->fd, buf, 64))
 	|| (f->file && ((f->ret = smthing_thr(f)) == 64)))
     {
@@ -327,8 +328,8 @@ void		sha_256(t_flags *f)
   while(f->i < f->ret)
     {
       sha_copy((char*)w, &buf[f->i], f);
-      //printW256(w);
-      //printSW256(w);
+      printW256(w);
+      printSW256(w);
 	f->i += 64;
     sha256_hash(f);
     }

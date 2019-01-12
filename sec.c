@@ -301,7 +301,8 @@ void	ft_putmd5(char *catch, t_flags *f)
 
   i = 0;
   
-  printf("MD5 (%s) = ", f->name); 
+  if (!f->p && !f->s)
+    printf("MD5 (%s) = ", f->name); 
   while (i < 16)
   {
     printf("%02hhx", (unsigned char)catch[i]);
@@ -340,7 +341,9 @@ int     optns(t_flags *f, char **argv)
 
 void	ft_stdin(t_flags *f, char **argv)
 {
-
+  f->fd = 0;
+  f->i = 0;
+  f->alg(f);
 }
 
 void	ft_flags(t_flags *f, char **argv)
@@ -348,12 +351,34 @@ void	ft_flags(t_flags *f, char **argv)
 
 }
 
+void	ft_writer(t_flags *f, char **argv)
+{
+
+  int i;
+
+  i = 0;
+  while (argv[f->i][i] != '\0')
+    {
+      write(f->fd, &argv[f->i][i], 1);
+      i++;
+    }
+
+}
+
 void	ft_strin(t_flags *f, char **argv)
 {
+  char *hey = "dude";
+
   f->i++;
-  f->file = argv[f->i];
+  f->name = argv[f->i];
+  f->fd = (uint32_t)open("./del", O_RDWR | O_CREAT, 00777);
+  ft_writer(f, argv);
+  //f->fd = fopen(argv[f->i], "r");
+  //f->fd = (uint32_t)open(argv[f->i], O_RDONLY);
+  f->i = 0;
   f->alg(f);
   f->file = NULL;
+  close(f->fd);
 }
 
 void	parse(t_flags *f, char **argv, void (**op) (t_flags *f, char **argv))
@@ -364,7 +389,7 @@ void	parse(t_flags *f, char **argv, void (**op) (t_flags *f, char **argv))
   while(argv[f->i] != NULL)
     {
       hold = f->i;
-      if (argv[f->i][0] == '-' && (hold += 1))
+      if (argv[f->i][0] == '-')// && (hold += 1))
 	op[(argv[f->i][1])](f, argv);
       else if (!optns(f, argv))
 	{
@@ -393,7 +418,7 @@ void	ass_op(void (**op) (t_flags *f, char **argv))
   op['p'] = ft_stdin;
   op['q'] = ft_flags;
   op['r'] = ft_flags;
-  op['s'] = ft_strin;
+  op['s'] = ft_strin;//init rest to error handling function, for invalid flag
 }
 
 int main(int argc, char **argv)

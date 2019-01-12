@@ -26,6 +26,7 @@ typedef struct s_ap			t_flags;
 
 struct			s_ap
 {
+  int fd2;
   char *name;
   void (*alg) (t_flags *f);
 	uint32_t       	fd;
