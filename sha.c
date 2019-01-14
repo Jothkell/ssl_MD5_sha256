@@ -2,7 +2,7 @@
 /*                                                                            */
 /*                                                        :::      ::::::::   */
 /*   first.c                                            :+:      :+:    :+:   */
-/*                                                    +:+ +:+ +:+  */
+/*                                                    +:+ +:+         +:+     */
 /*   By: jkellehe <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/12/09 17:14:19 by jkellehe          #+#    #+#             */
@@ -38,10 +38,10 @@ void    sha_initi(t_flags *f)
     //
 }
 
-
+/*
 uint64_t	*sha_make_k(uint64_t *k, t_flags *f)
 {
-  uint64_t b[] = {
+  const uint64_t b[] = {
     0x428a2f98d728ae22, 0x7137449123ef65cd, 0xb5c0fbcfec4d3b2f, 0xe9b5dba58189dbbc, 0x3956c25bf348b538, 
     0x59f111f1b605d019, 0x923f82a4af194f9b, 0xab1c5ed5da6d8118, 0xd807aa98a3030242, 0x12835b0145706fbe, 
     0x243185be4ee4b28c, 0x550c7dc3d5ffb4e2, 0x72be5d74f27b896f, 0x80deb1fe3b1696b1, 0x9bdc06a725c71235, 
@@ -69,7 +69,7 @@ uint64_t	*sha_make_k(uint64_t *k, t_flags *f)
       i++;
     }
   return (k);
-}
+  }
 
 uint32_t		*z_ero(uint32_t *w, t_flags *f)
 {
@@ -83,7 +83,7 @@ uint32_t		*z_ero(uint32_t *w, t_flags *f)
       i++;
     }
   return (w);
-}
+}*/
 
 void	sha_copy(char *w, char *buf, t_flags *f)
 {
@@ -136,7 +136,7 @@ uint64_t rR64(uint64_t w, uint64_t r)
       i++;
     }
   return (1);
-  }*/
+  }
 
 void		sha_init_abc(t_flags *f)
 {
@@ -157,7 +157,7 @@ void		sha_init_abc(t_flags *f)
   f->six = f->h5;
   f->seven = f->h6;
   f->eight = f->h7;
-}
+}*/
 
 void		sub_hash(t_flags *f)
 {
