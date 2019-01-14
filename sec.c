@@ -155,6 +155,7 @@ void	ft_pad(char *buf, t_flags *f)
   char *hold;
   int debug = 0;
 
+  (f->fd == 0 && !f->q && !f->is_ne) ? (printf("%s", buf)) : (0);
   buf = (f->file) ? (ft_strcpy(buf, f->file)) : (buf);
   f->orig_len += (f->ret * 8);
   hold = (char*)&f->orig_len;
@@ -265,9 +266,11 @@ void        ft_md5(t_flags *f)
   f->s = ft_make_s();
   f->K = ft_make_k();
   f->b_ind = 0;
+  f->fd = (f->st) ? (uint32_t)open("./del", O_RDONLY) : (f->fd);
   while(64 == (f->ret = read(f->fd, buf, 64)))
     {
       //printf("%x %x %x %x\n", f->a_fin, f->b_fin, f->c_fin, f->d_fin);
+      (f->fd == 0 && !f->q) ? (printf("%s", buf)) : (0);
   f->M = (uint32_t*)buf;
   md5_hash(f);
   f->a_fin += f->a;
@@ -301,13 +304,26 @@ void	ft_putmd5(char *catch, t_flags *f)
 
   i = 0;
   
-  if (!f->p && !f->s)
-    printf("MD5 (%s) = ", f->name); 
+  if(f->st)
+    {
+    (f->r) ? (0) : (printf("MD5 (\"%s\") = ", f->name));
+    }
+  else if (!f->p && !f->never)
+    {
+    (f->r) ? (0) : (printf("MD5 (%s) = ", f->name));
+    }
+
   while (i < 16)
   {
     printf("%02hhx", (unsigned char)catch[i]);
     i++;
   }
+  
+  if(f->st)
+    (f->r) ? (printf(" \"%s\"", f->name)) : (0);
+  else if (!f->p)
+    (f->r) ? (printf(" %s", f->name)) : (0);
+  printf("\n");
 }
 
 
@@ -342,13 +358,17 @@ int     optns(t_flags *f, char **argv)
 void	ft_stdin(t_flags *f, char **argv)
 {
   f->fd = 0;
+  f->never = 0;
   f->i = 0;
+  f->p = 1;
   f->alg(f);
+  f->p = 0;
 }
 
 void	ft_flags(t_flags *f, char **argv)
 {
-
+  f->r = (argv[f->i][1] == 'r') ? (1) : (f->r);
+  f->q = (argv[f->i][1] == 'q') ? (1) : (f->q);
 }
 
 void	ft_writer(t_flags *f, char **argv)
@@ -367,10 +387,14 @@ void	ft_writer(t_flags *f, char **argv)
 
 void	ft_strin(t_flags *f, char **argv)
 {
-  char *hey = "dude";
+  //char *hey = "dude";
 
+  remove("./del");
+  f->never = 0;
+  f->st = 1;
   f->i++;
   f->name = argv[f->i];
+  f->st = 1;
   f->fd = (uint32_t)open("./del", O_RDWR | O_CREAT, 00777);
   ft_writer(f, argv);
   //f->fd = fopen(argv[f->i], "r");
@@ -378,38 +402,43 @@ void	ft_strin(t_flags *f, char **argv)
   f->i = 0;
   f->alg(f);
   f->file = NULL;
+  f->st = 0;
+  f->hold++;
   close(f->fd);
+  remove("./del");
+  
 }
 
 void	parse(t_flags *f, char **argv, void (**op) (t_flags *f, char **argv))
 {
-  int hold;
-
   f->i = 1;
   while(argv[f->i] != NULL)
     {
-      hold = f->i;
-      if (argv[f->i][0] == '-')// && (hold += 1))
+      f->hold = f->i;
+      if (argv[f->i][0] == '-')
 	op[(argv[f->i][1])](f, argv);
       else if (!optns(f, argv))
 	{
 	  if(1 != (f->fd = open(argv[f->i], O_RDONLY)) && !(f->i = 0))
 	    {
-	      f->name = argv[hold];
+	      f->name = argv[f->hold];
+	      f->never = 0;
 	    f->alg(f);	    
 	    }
 	  else
 	    printf("%s: No such file or directory\n", argv[f->i]);
-	  f->i = hold;
+	  f->i = f->hold;
 	  while(argv[++f->i] != NULL)
 	    {
 	      printf("%s: No such file or directory\n", argv[f->i]);
 	    }
 	  return ;
 	}
-      f->i = hold;
+      f->i = f->hold;
       f->i++;
     }
+  if (f->never && f->alg != ft_err && (f->is_ne = 1))
+    ft_stdin(f, argv);
 }
 
 
@@ -419,6 +448,16 @@ void	ass_op(void (**op) (t_flags *f, char **argv))
   op['q'] = ft_flags;
   op['r'] = ft_flags;
   op['s'] = ft_strin;//init rest to error handling function, for invalid flag
+}
+
+void	ft_quiet(t_flags *f, char **argv)
+{
+  int i = 0;
+  while (argv[i] != NULL)
+    {
+      f->q = (argv[i][0] == '-' && argv[i][1] == 'q') ? (1) : (f->q);
+      i++;
+    }
 }
 
 int main(int argc, char **argv)
@@ -439,13 +478,16 @@ int main(int argc, char **argv)
     }
   f = malloc(sizeof(t_flags));
   //sha_initi(f);
+  f->never = 1;
+  f->p = 0; f->st = 0;
   f->i = 0;
   f->orig_len = 0;
   f->file = NULL;
   f->fd = -20;
+  f->q = 0; f->r = 0;
   f->alg = ft_err;
   //f->b_ind = 1;
   parse(f, argv, op);
 
-  printf("\n");
+  //printf("\n");
 }

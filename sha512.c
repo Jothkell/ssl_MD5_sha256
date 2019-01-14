@@ -73,6 +73,7 @@ void            sha_512(t_flags *f)
   f->b_ind = 1;
   f->W = (uint64_t*)z_ero((uint32_t*)w, f);
   f->k = sha_make_k(k, f);
+  f->fd = (f->st) ? (uint32_t)open("./del", O_RDONLY) : (f->fd);
   while(128 == (f->ret = read(f->fd, buf, 128)) || (f->file && ((f->ret = smthing_thr(f)) == 128)))
     {
       sha_copy((char*)w, buf, f);
