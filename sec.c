@@ -267,8 +267,9 @@ void        ft_md5(t_flags *f)
   f->K = ft_make_k();
   f->b_ind = 0;
   f->fd = (f->st) ? (uint32_t)open("./del", O_RDONLY) : (f->fd);
-  while(64 == (f->ret = read(f->fd, buf, 64)))
+  while(64 == (f->ret = read(f->fd, buf, 64)) || (buf[f->ret] = '\0'))
     {
+      buf[f->ret] = '\0';
       //printf("%x %x %x %x\n", f->a_fin, f->b_fin, f->c_fin, f->d_fin);
       (f->fd == 0 && !f->q) ? (printf("%s", buf)) : (0);
   f->M = (uint32_t*)buf;
