@@ -36,7 +36,7 @@ void    sha_initi(t_flags *f)
   //
 }
 
-void            sha_init_abc(t_flags *f)
+int            sha_init_abc(t_flags *f)
 {
   f->a = f->a_fin;
   f->b = f->b_fin;
@@ -46,7 +46,6 @@ void            sha_init_abc(t_flags *f)
   f->f = f->f_fin;
   f->g = f->g_fin;
   f->h = f->h_fin;
-
   f->one = f->h0;
   f->two = f->h1;
   f->three = f->h2;
@@ -55,6 +54,7 @@ void            sha_init_abc(t_flags *f)
   f->six = f->h5;
   f->seven = f->h6;
   f->eight = f->h7;
+  return (0);
 }
 
 uint64_t        *sha_make_k(uint64_t *k, t_flags *f)

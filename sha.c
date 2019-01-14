@@ -11,7 +11,7 @@
 /* ************************************************************************** */
 
 #include "hache.h"
-
+/*
 void    sha_initi(t_flags *f)
 {
   //f->i = 0;
@@ -38,7 +38,7 @@ void    sha_initi(t_flags *f)
     //
 }
 
-/*
+
 uint64_t	*sha_make_k(uint64_t *k, t_flags *f)
 {
   const uint64_t b[] = {
@@ -157,7 +157,7 @@ void		sha_init_abc(t_flags *f)
   f->six = f->h5;
   f->seven = f->h6;
   f->eight = f->h7;
-}*/
+}
 
 void		sub_hash(t_flags *f)
 {
@@ -209,7 +209,7 @@ void		sha256_hash(t_flags *f)
     }
   accumulate(f);
   //printf("%u %u %u %u %u %u %u %u\n", f->a_fin, f->b_fin, f->c_fin, f->d_fin, f->e_fin, f->f_fin, f->g_fin, f->h_fin);
-}
+}*/
 
 char *sha_append(t_flags *f)
 {
@@ -235,7 +235,7 @@ char *sha_append(t_flags *f)
   return ((char*)ret);
 }
 
-void	print256(char *p, t_flags *f)
+/*void	print256(char *p, t_flags *f)
 {
   int i;
   unsigned int *hold;
@@ -336,3 +336,4 @@ void		sha_256(t_flags *f)
   print256(sha_append(f), f);
 }
  
+*/
