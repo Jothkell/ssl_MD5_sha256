@@ -76,6 +76,7 @@ void            sha_512(t_flags *f)
   f->fd = (f->st) ? (uint32_t)open("./del", O_RDONLY) : (f->fd);
   while(128 == (f->ret = read(f->fd, buf, 128)) || (f->file && ((f->ret = smthing_thr(f)) == 128)))
     {
+      (f->fd == 0 && !f->is_ne) ? (printf("%s", buf)) : (0);
       sha_copy((char*)w, buf, f);
       //printW((uint32_t*)w);
       sha512_hash(f);

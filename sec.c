@@ -132,6 +132,7 @@ void    ft_64pad(char *buf, t_flags *f)
   char *hold;
   int debug = 0;
 
+  (f->fd == 0 && !f->is_ne) ? (printf("%s", buf)) : (0);
   buf = (f->file) ? (ft_strcpy(buf, f->file)) : (buf);
   f->orig_len += (f->ret * 8);
   hold = (char*)&f->orig_len;
@@ -307,13 +308,9 @@ void	ft_putmd5(char *catch, t_flags *f)
   i = 0;
   
   if(f->st)
-    {
     	(f->r || f->q) ? (0) : (printf("MD5 (\"%s\") = ", f->name));
-    }
   else if (!f->p && !f->never)
-    {
     	(f->r || f->q) ? (0) : (printf("MD5 (%s) = ", f->name));
-    }
 
   while (i < 16)
   {
@@ -346,6 +343,7 @@ int     optns(t_flags *f, char **argv)
         {
           if (ft_strcmp(op[j], argv[f->i]) == 0)
             {
+	      f->algy = op[j];
 	      f->det = j;
 	      f->alg = fun[j];
 	      return (1);

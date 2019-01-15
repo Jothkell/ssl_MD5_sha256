@@ -241,6 +241,10 @@ void	print256(char *p, t_flags *f)
   unsigned int *hold;
   int end;
 
+  if(f->st)
+    (f->r || f->q) ? (0) : (printf("%s (\"%s\") = ", f->algy, f->name));
+  else if (!f->p && !f->never)
+    (f->r || f->q) ? (0) : (printf("%s (%s) = ", f->algy, f->name));
   i = (TWO_FIFTY(f->det)) ? (31) : (63);
   //i = (f->det == 2) ? (27) : (i);
   end = (f->det == 2) ? (4) : (0);
@@ -250,7 +254,10 @@ void	print256(char *p, t_flags *f)
       printf("%02hhx", p[i]);
       i--;
     }
-
+  if(f->st)
+    (f->r && !f->q) ? (printf(" \"%s\"", f->name)) : (0);
+  else if (!f->p)
+    (f->r && !f->q) ? (printf(" %s", f->name)) : (0);
   printf("\n");
 
 }
@@ -318,6 +325,7 @@ void		sha_256(t_flags *f)
   while(64 == (f->ret = read(f->fd, buf, 64))
 	|| (f->file && ((f->ret = smthing_thr(f)) == 64)))
     {
+      (f->fd == 0 && !f->is_ne) ? (printf("%s", buf)) : (0);
       sha_copy((char*)w, buf, f);
       sha256_hash(f);
       f->orig_len += 512;
