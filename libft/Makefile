@@ -22,7 +22,7 @@ ft_isprint.c ft_itoa.c ft_strcat.c ft_strchr.c ft_strcpy.c ft_strdup.c \
 ft_strjoin.c ft_strmap.c ft_strmapi.c ft_strncat.c ft_strncpy.c ft_strnew.c \
 ft_strnstr.c ft_strrchr.c ft_strsplit.c ft_strstr.c ft_strsub.c ft_strtrim.c \
 ft_strlcat.c ft_lstadd.c ft_lstdel.c ft_lstdelone.c ft_lstiter.c ft_lstmap.c \
-ft_lstnew.c 
+ft_lstnew.c itoa.c main.c mpointed.c pad.c pointed.c thicc.c ft_but.c beurocrat.c
 
 HEADER = libft.h
 

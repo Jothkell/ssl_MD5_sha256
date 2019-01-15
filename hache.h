@@ -29,9 +29,10 @@ struct			s_ap
   int fd2;
   char *name;
   void (*alg) (t_flags *f);
-	uint32_t       	fd;
+	int       	fd;
 	int		ret;
 	char *file;
+  char *algy;
   int hold;
   uint32_t *K;
   uint8_t is_ne;
