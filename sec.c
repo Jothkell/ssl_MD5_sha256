@@ -155,7 +155,7 @@ void	ft_pad(char *buf, t_flags *f)
   char *hold;
   int debug = 0;
 
-  (f->fd == 0 && !f->q && !f->is_ne) ? (printf("%s", buf)) : (0);
+  (f->fd == 0 && !f->is_ne) ? (printf("%s", buf)) : (0);
   buf = (f->file) ? (ft_strcpy(buf, f->file)) : (buf);
   f->orig_len += (f->ret * 8);
   hold = (char*)&f->orig_len;
@@ -271,7 +271,8 @@ void        ft_md5(t_flags *f)
     {
       buf[f->ret] = '\0';
       //printf("%x %x %x %x\n", f->a_fin, f->b_fin, f->c_fin, f->d_fin);
-      (f->fd == 0 && !f->q) ? (printf("%s", buf)) : (0);
+      //printf("%d %d\n", f->fd, f->is_ne);
+      (f->fd == 0 && !f->is_ne) ? (printf("%s", buf)) : (0);
   f->M = (uint32_t*)buf;
   md5_hash(f);
   f->a_fin += f->a;
@@ -307,11 +308,11 @@ void	ft_putmd5(char *catch, t_flags *f)
   
   if(f->st)
     {
-    (f->r) ? (0) : (printf("MD5 (\"%s\") = ", f->name));
+    	(f->r || f->q) ? (0) : (printf("MD5 (\"%s\") = ", f->name));
     }
   else if (!f->p && !f->never)
     {
-    (f->r) ? (0) : (printf("MD5 (%s) = ", f->name));
+    	(f->r || f->q) ? (0) : (printf("MD5 (%s) = ", f->name));
     }
 
   while (i < 16)
@@ -321,9 +322,9 @@ void	ft_putmd5(char *catch, t_flags *f)
   }
   
   if(f->st)
-    (f->r) ? (printf(" \"%s\"", f->name)) : (0);
+    (f->r && !f->q) ? (printf(" \"%s\"", f->name)) : (0);
   else if (!f->p)
-    (f->r) ? (printf(" %s", f->name)) : (0);
+    (f->r && !f->q) ? (printf(" %s", f->name)) : (0);
   printf("\n");
 }
 
@@ -420,7 +421,8 @@ void	parse(t_flags *f, char **argv, void (**op) (t_flags *f, char **argv))
 	op[(argv[f->i][1])](f, argv);
       else if (!optns(f, argv))
 	{
-	  if(1 != (f->fd = open(argv[f->i], O_RDONLY)) && !(f->i = 0))
+	  //perror(argv[f->i]);
+	  if(0 <= (f->fd = open(argv[f->i], O_RDONLY)) && !(f->i = 0))
 	    {
 	      f->name = argv[f->hold];
 	      f->never = 0;
@@ -461,6 +463,8 @@ void	ft_quiet(t_flags *f, char **argv)
     }
 }
 
+
+
 int main(int argc, char **argv)
 {
   t_flags *f;
@@ -477,9 +481,10 @@ int main(int argc, char **argv)
       ft_err(f);
       return(1);
     }
+  //ft_quiet(f, argv);
   f = malloc(sizeof(t_flags));
   //sha_initi(f);
-  f->never = 1;
+  f->never = 1; f->is_ne = 0;
   f->p = 0; f->st = 0;
   f->i = 0;
   f->orig_len = 0;
@@ -488,6 +493,7 @@ int main(int argc, char **argv)
   f->q = 0; f->r = 0;
   f->alg = ft_err;
   //f->b_ind = 1;
+  //ft_quiet(f, argv);
   parse(f, argv, op);
 
   //printf("\n");
