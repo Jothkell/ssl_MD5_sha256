@@ -70,7 +70,7 @@ void			ft_putstr_fd_prec(char *s, t_ap *tree)
 {
 	if (NUMBERS(tree->c))
 	{
-		ft_pad(s, tree);
+		ft_padder(s, tree);
 	}
 	else
 		ft_spad(s, tree);

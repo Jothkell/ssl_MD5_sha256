@@ -84,7 +84,7 @@ void			addy(va_list ap, char *format, t_ap *tree)
 	}
 	else
 		hold = ft_maxtoa_base((intmax_t)yeah, 16, format);
-	ft_pad(hold, tree);
+	ft_padder(hold, tree);
 	free(hold);
 }
 

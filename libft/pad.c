@@ -51,7 +51,7 @@ char			*ft_spad(char *s, t_ap *tree)
 	return (NULL);
 }
 
-/*char			*ft_padder(char *s, t_ap *tree)
+char			*ft_padder(char *s, t_ap *tree)
 {
 	tree->len += (ft_strlen(s));
 	tree->prec = ((tree->prec >= (int)ft_strlen(s)) && (tree->prec > 0))
@@ -77,7 +77,7 @@ char			*ft_spad(char *s, t_ap *tree)
 		(bt_putstr_fd(s, tree)) : (0);
 	(tree->left) ? (precwidth(tree->width, tree, 0)) : (0);
 	return (NULL);
-	}*/
+}
 
 char			*ft_fpad(char *s, t_ap *tree)
 {

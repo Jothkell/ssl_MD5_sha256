@@ -72,7 +72,7 @@ void print_binary_string(char *message, int len)
   while (++i < len)
     {
       print_binary_variable(message[i], 8);
-      printf("%d   \n", i);
+      ft_printf("%d   \n", i);
     }
 }
 void	l_ind(char *hold, char *buf, t_flags *f)
@@ -132,7 +132,7 @@ void    ft_64pad(char *buf, t_flags *f)
   char *hold;
   int debug = 0;
 
-  (f->fd == 0 && !f->is_ne) ? (printf("%s", buf)) : (0);
+  (f->fd == 0 && !f->is_ne) ? (ft_printf("%s", buf)) : (0);
   buf = (f->file) ? (ft_strcpy(buf, f->file)) : (buf);
   f->orig_len += (f->ret * 8);
   hold = (char*)&f->orig_len;
@@ -156,7 +156,7 @@ void	ft_pad(char *buf, t_flags *f)
   char *hold;
   int debug = 0;
 
-  (f->fd == 0 && !f->is_ne) ? (printf("%s", buf)) : (0);
+  (f->fd == 0 && !f->is_ne) ? (ft_printf("%s", buf)) : (0);
   buf = (f->file) ? (ft_strcpy(buf, f->file)) : (buf);
   f->orig_len += (f->ret * 8);
   hold = (char*)&f->orig_len;
@@ -224,7 +224,7 @@ void    md5_hash(t_flags *f)
   f->d = f->d_fin;
   while (i < 64)
     {
-      //printf("%x %x %x %x\n", f->a, f->b, f->c, f->d);
+      //printfOA("%x %x %x %x\n", f->a, f->b, f->c, f->d);
       F = (i <= 15) ? ((f->b & f->c) | ((~f->b) & f->d)) : (F);
       g = (i <= 15) ? (i) : (g);
       F = (i >= 16 && i <= 31) ? ((f->d & f->b) | ((~f->d) & f->c)) : (F);
@@ -273,7 +273,7 @@ void        ft_md5(t_flags *f)
       buf[f->ret] = '\0';
       //printf("%x %x %x %x\n", f->a_fin, f->b_fin, f->c_fin, f->d_fin);
       //printf("%d %d\n", f->fd, f->is_ne);
-      (f->fd == 0 && !f->is_ne) ? (printf("%s", buf)) : (0);
+      (f->fd == 0 && !f->is_ne) ? (ft_printf("%s", buf)) : (0);
   f->M = (uint32_t*)buf;
   md5_hash(f);
   f->a_fin += f->a;
@@ -308,27 +308,27 @@ void	ft_putmd5(char *catch, t_flags *f)
   i = 0;
   
   if(f->st)
-    	(f->r || f->q) ? (0) : (printf("MD5 (\"%s\") = ", f->name));
+    	(f->r || f->q) ? (0) : (ft_printf("MD5 (\"%s\") = ", f->name));
   else if (!f->p && !f->never)
-    	(f->r || f->q) ? (0) : (printf("MD5 (%s) = ", f->name));
+    	(f->r || f->q) ? (0) : (ft_printf("MD5 (%s) = ", f->name));
 
   while (i < 16)
   {
-    printf("%02hhx", (unsigned char)catch[i]);
+    ft_printf("%02hhx", (unsigned char)catch[i]);
     i++;
   }
   
   if(f->st)
-    (f->r && !f->q) ? (printf(" \"%s\"", f->name)) : (0);
+    (f->r && !f->q) ? (ft_printf(" \"%s\"", f->name)) : (0);
   else if (!f->p)
-    (f->r && !f->q) ? (printf(" %s", f->name)) : (0);
-  printf("\n");
+    (f->r && !f->q) ? (ft_printf(" %s", f->name)) : (0);
+  ft_printf("\n");
 }
 
 
 void	ft_err(t_flags *f)
 {
-  printf("usage: ft_ssl command [command opts] [command args]\n");
+  ft_printf("usage: ft_ssl command [command opts] [command args]\n");
   //return (-1);
 }
 
@@ -427,11 +427,11 @@ void	parse(t_flags *f, char **argv, void (**op) (t_flags *f, char **argv))
 	    f->alg(f);	    
 	    }
 	  else
-	    printf("%s: No such file or directory\n", argv[f->i]);
+	    ft_printf("%s: No such file or directory\n", argv[f->i]);
 	  f->i = f->hold;
 	  while(argv[++f->i] != NULL)
 	    {
-	      printf("%s: No such file or directory\n", argv[f->i]);
+	      ft_printf("%s: No such file or directory\n", argv[f->i]);
 	    }
 	  return ;
 	}

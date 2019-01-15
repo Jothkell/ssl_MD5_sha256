@@ -2,7 +2,7 @@
 /*                                                                            */
 /*                                                        :::      ::::::::   */
 /*   first.c                                            :+:      :+:    :+:   */
-/*                                                    +:+ +:+ +:+  */
+/*                                                    +:+ +:+          +:+    */
 /*   By: jkellehe <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/12/09 17:14:19 by jkellehe          #+#    #+#             */
@@ -242,23 +242,23 @@ void	print256(char *p, t_flags *f)
   int end;
 
   if(f->st)
-    (f->r || f->q) ? (0) : (printf("%s (\"%s\") = ", f->algy, f->name));
+    (f->r || f->q) ? (0) : (ft_printf("%s (\"%s\") = ", f->algy, f->name));
   else if (!f->p && !f->never)
-    (f->r || f->q) ? (0) : (printf("%s (%s) = ", f->algy, f->name));
+    (f->r || f->q) ? (0) : (ft_printf("%s (%s) = ", f->algy, f->name));
   i = (TWO_FIFTY(f->det)) ? (31) : (63);
   //i = (f->det == 2) ? (27) : (i);
   end = (f->det == 2) ? (4) : (0);
   end = (f->det == 4) ? (16) : (end);
   while (i >= end)
     {
-      printf("%02hhx", p[i]);
+      ft_printf("%02hhx", p[i]);
       i--;
     }
   if(f->st)
-    (f->r && !f->q) ? (printf(" \"%s\"", f->name)) : (0);
+    (f->r && !f->q) ? (ft_printf(" \"%s\"", f->name)) : (0);
   else if (!f->p)
-    (f->r && !f->q) ? (printf(" %s", f->name)) : (0);
-  printf("\n");
+    (f->r && !f->q) ? (ft_printf(" %s", f->name)) : (0);
+  ft_printf("\n");
 
 }
 
@@ -268,7 +268,7 @@ void            printW256(uint32_t *w)
   i = 0;
   while (i < 16)
     {
-      printf("%x %d\n", w[i], i);
+      ft_printf("%x %d\n", w[i], i);
       i++;
     }
 }
@@ -279,7 +279,7 @@ void            printSW256(uint32_t *w)
   i = 0;
   while (i < 64)
     {
-      printf("%x %d\n", w[i], i);
+      ft_printf("%x %d\n", w[i], i);
       i++;
     }
 }
@@ -294,7 +294,7 @@ void		printW(uint32_t *w)
   hold = (uint64_t *)w;
   while (i < 16)
     {
-      printf("%llx %d\n", hold[i], i);
+      ft_printf("%llx %d\n", hold[i], i);
       i++;
     }
 }
@@ -307,7 +307,7 @@ void            printSW(uint32_t *w)
   i = 0;
   while (i < 80)//80 for 512
     {
-      printf("%llx %d\n", debug[i], i);
+      ft_printf("%llx %d\n", debug[i], i);
       i++;
     }
 }
@@ -325,7 +325,7 @@ void		sha_256(t_flags *f)
   while(64 == (f->ret = read(f->fd, buf, 64))
 	|| (f->file && ((f->ret = smthing_thr(f)) == 64)))
     {
-      (f->fd == 0 && !f->is_ne) ? (printf("%s", buf)) : (0);
+      (f->fd == 0 && !f->is_ne) ? (ft_printf("%s", buf)) : (0);
       sha_copy((char*)w, buf, f);
       sha256_hash(f);
       f->orig_len += 512;

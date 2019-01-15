@@ -117,7 +117,7 @@ void			floot(va_list ap, char *format, t_ap *tree)
 	tree->ret += (holder > -1 && holder < 0) ? (write(1, "-", 1)) : (0);
 	tree->whold = tree->width;
 	tree->width = (!tree->left) ? (tree->width) : (0);
-	ft_pad(ft_maxtoa_base((intmax_t)holder,
+	ft_padder(ft_maxtoa_base((intmax_t)holder,
 		(intmax_t)10, format), tree);
 	tree->prec = (FLOOT(tree) || tree->phold == 10000) ? (6) : (tree->phold);
 	tree->ret += (tree->prec) ? (write(1, ".", 1)) : (0);

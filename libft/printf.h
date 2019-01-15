@@ -108,7 +108,7 @@ void					str(va_list ap, char *format, t_ap *tree);
 void					udigit(va_list ap, char *format, t_ap *tree);
 int						count_usize(uintmax_t n);
 int						ft_wstrlen(wchar_t *wc);
-char					*ft_pad(char *s, t_ap *tree);
+char					*ft_padder(char *s, t_ap *tree);
 void					big_digit(va_list ap, char *format, t_ap *tree);
 void					wchar(va_list ap, char *format, t_ap *tree);
 int						bt_putwstr(wchar_t *s, t_ap *tree);
