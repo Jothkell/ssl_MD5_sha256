@@ -55,8 +55,7 @@ void            sha_256(t_flags *f)
   f->w = z_ero(w, f);
   f->k = sha_make_k(k, f);
   f->fd = (f->st) ? (uint32_t)open("./del", O_RDONLY) : (f->fd);
-  while(64 == (f->ret = read(f->fd, buf, 64))
-        || (f->file && ((f->ret = smthing_thr(f)) == 64)))
+  while(64 == (f->ret = read(f->fd, buf, 64))) //|| (f->file && ((f->ret = smthing_thr(f)) == 64)))
     {
       (f->fd == 0 && !f->is_ne) ? (ft_printf("%s", buf)) : (0);
       sha_copy((char*)w, buf, f);

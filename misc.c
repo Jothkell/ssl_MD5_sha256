@@ -13,7 +13,7 @@
 
 #include "hache.h"
 
-int     smthing_thr(t_flags *f)
+/*int     smthing_thr(t_flags *f)
 {
   int i;
   int size;
@@ -27,7 +27,7 @@ int     smthing_thr(t_flags *f)
         return (i);
     }
   return (i);
-}
+  }*/
 
 uint32_t leftRotate(uint32_t n, uint32_t d)
 {

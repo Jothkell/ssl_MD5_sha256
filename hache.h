@@ -26,6 +26,8 @@ typedef struct s_ap			t_flags;
 
 struct			s_ap
 {
+  uint64_t	s0;
+  uint64_t	s1;
   int fd2;
   char *name;
   void (*alg) (t_flags *f);
@@ -97,13 +99,27 @@ struct			s_ap
 
 };
 
+void    ass_op(void (**op) (t_flags *f, char **argv));
+void    parse(t_flags *f, char **argv, void (**op) (t_flags *f, char **argv));
+void        ft_md5(t_flags *f);
+char *append(t_flags *f);
+uint32_t        *ft_make_s(void);
+uint32_t *ft_make_k(void);
+uint64_t        *sha_make_k(uint64_t *k, t_flags *f);
+void    initi(t_flags *f);
+uint32_t leftRotate(uint32_t n, uint32_t d);
+void    ft_strin(t_flags *f, char **argv);
+void    ft_writer(t_flags *f, char **argv);
+void    ft_flags(t_flags *f, char **argv);
+void    ft_stdin(t_flags *f, char **argv);
+void    ft_quiet(t_flags *f, char **argv);
 void     ft_err(t_flags *f);
 int     smthing_thr(t_flags *f);
 uint64_t rR64(uint64_t w, uint64_t r);
 void    ft_64pad(char *buf, t_flags *f);
 void            sha_512(t_flags *f);
-void            sha_init_abc(t_flags *f);
-void            sub_hash(t_flags *f);
+int            sha_init_abc(t_flags *f);
+int            sub_hash(t_flags *f);
 uint32_t rR(uint32_t w, uint32_t r);
 uint32_t                *z_ero(uint32_t *w, t_flags *f);
 uint64_t        *sha_make_k(uint64_t *k, t_flags *f);
