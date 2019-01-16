@@ -26,6 +26,7 @@ void			help_main(t_flags *f)
 	f->q = 0;
 	f->r = 0;
 	f->alg = ft_err;
+	f->i = 1;
 }
 
 int				main(int argc, char **argv)
