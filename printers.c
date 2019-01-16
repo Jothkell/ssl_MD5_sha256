@@ -6,7 +6,7 @@
 /*   By: jkellehe <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/12/09 17:14:19 by jkellehe          #+#    #+#             */
-/*   Updated: 2019/01/16 12:20:08 by jkellehe         ###   ########.fr       */
+/*   Updated: 2019/01/16 14:45:26 by jkellehe         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,7 +36,6 @@ void			ft_putmd5(char *catch, t_flags *f)
 void			print256(char *p, t_flags *f)
 {
 	int			i;
-	uint32_t	*hold;
 	int			end;
 
 	if (f->st)

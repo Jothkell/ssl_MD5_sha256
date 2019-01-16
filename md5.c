@@ -6,7 +6,7 @@
 /*   By: jkellehe <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/12/09 17:14:19 by jkellehe          #+#    #+#             */
-/*   Updated: 2019/01/15 23:05:31 by jkellehe         ###   ########.fr       */
+/*   Updated: 2019/01/16 14:40:38 by jkellehe         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -68,7 +68,6 @@ void				ft_md5(t_flags *f)
 {
 	char			buf[130];
 	char			*catch;
-	uint64_t		k[80];
 
 	help_me3(f);
 	while (64 == (f->ret = read(f->fd, buf, 64)))

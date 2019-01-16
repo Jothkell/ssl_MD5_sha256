@@ -20,7 +20,7 @@ all:  $(NAME)
 
 $(NAME):
 	@make -C $(LIB)
-	@gcc -g -o $(NAME) $(SRC) libft/libft.a
+	@gcc -Wextra -Werror -Wall -o $(NAME) $(SRC) libft/libft.a
 
 clean:
 	@make clean -C $(LIB)

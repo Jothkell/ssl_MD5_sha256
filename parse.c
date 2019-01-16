@@ -6,22 +6,30 @@
 /*   By: jkellehe <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/12/09 17:14:19 by jkellehe          #+#    #+#             */
-/*   Updated: 2019/01/16 14:14:19 by jkellehe         ###   ########.fr       */
+/*   Updated: 2019/01/16 14:51:47 by jkellehe         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "hache.h"
 
+void			fn(void (*fun[8]) (t_flags *f))
+{
+	fun[0] = ft_md5;
+	fun[1] = sha_256;
+	fun[2] = sha_256;
+	fun[3] = sha_512;
+	fun[4] = sha_512;
+	fun[5] = NULL;
+}
+
 int				optns(t_flags *f, char **argv)
 {
 	const char	*op[] = {"md5", "sha256", "sha224",
 		"sha512", "sha384", NULL};
-	const void	(*fun[]) (t_flags *f) = {(const void(*)(t_flags *))ft_md5,
-		(const void(*)(t_flags *))sha_256, (const void(*)(t_flags *))sha_256,
-		(const void(*)(t_flags *))sha_512,
-		(const void(*)(t_flags *))sha_512, NULL};
+	void		(*fun[8]) (t_flags *f);
 	int			j;
 
+	fn(fun);
 	j = 0;
 	while (j <= 4)
 	{
@@ -43,7 +51,7 @@ void			parse(t_flags *f, char **a, void (**op) (t_flags *f, char **a))
 	{
 		f->hold = f->i;
 		if (a[f->i][0] == '-')
-			op[(a[f->i][1])](f, a);
+			op[(int)(a[f->i][1])](f, a);
 		else if (!optns(f, a))
 		{
 			if (0 <= (f->fd = open(a[f->i], O_RDONLY)))

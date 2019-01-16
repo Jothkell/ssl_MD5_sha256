@@ -6,7 +6,7 @@
 /*   By: jkellehe <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/12/09 17:14:19 by jkellehe          #+#    #+#             */
-/*   Updated: 2019/01/16 12:34:02 by jkellehe         ###   ########.fr       */
+/*   Updated: 2019/01/16 14:46:07 by jkellehe         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,6 +26,7 @@ void		ft_quiet(t_flags *f, char **argv)
 
 void		ft_stdin(t_flags *f, char **argv)
 {
+	argv += 0;
 	f->fd = 0;
 	f->never = 0;
 	f->i = 0;
