@@ -23,26 +23,26 @@ void				help_me(t_flags *f)
 void				md5_hash(t_flags *f)
 {
 	uint32_t		i;
-	uint32_t		f;
+	uint32_t		ff;
 	uint32_t		g;
 
 	i = 0;
 	help_me(f);
 	while (i < 64)
 	{
-		f = (i <= 15) ? ((f->b & f->c) | ((~f->b) & f->d)) : (f);
+		ff = (i <= 15) ? ((f->b & f->c) | ((~f->b) & f->d)) : (ff);
 		g = (i <= 15) ? (i) : (g);
-		f = (i >= 16 && i <= 31) ? ((f->d & f->b) | ((~f->d) & f->c)) : (f);
+		ff = (i >= 16 && i <= 31) ? ((f->d & f->b) | ((~f->d) & f->c)) : (ff);
 		g = (i >= 16 && i <= 31) ? ((5 * i + 1) % 16) : (g);
-		f = (i >= 32 && i <= 47) ? (f->b ^ f->c ^ f->d) : (f);
+		ff = (i >= 32 && i <= 47) ? (f->b ^ f->c ^ f->d) : (ff);
 		g = (i >= 32 && i <= 47) ? ((3 * i + 5) % 16) : (g);
-		f = (i >= 48 && i <= 63) ? (f->c ^ (f->b | (~f->d))) : (f);
+		ff = (i >= 48 && i <= 63) ? (f->c ^ (f->b | (~f->d))) : (ff);
 		g = (i >= 48 && i <= 63) ? ((7 * i) % 16) : (g);
-		f = f + f->a + f->K[i] + f->M[g];
+		ff = ff + f->a + f->kk[i] + f->mm[g];
 		f->a = f->d;
 		f->d = f->c;
 		f->c = f->b;
-		f->b = f->b + leftRotate(f, f->s[i]);
+		f->b = f->b + left_rotate(ff, f->s[i]);
 		i++;
 	}
 }
@@ -59,7 +59,7 @@ void				help_me3(t_flags *f)
 {
 	initi(f);
 	f->s = ft_make_s();
-	f->K = ft_make_k();
+	f->kk = ft_make_k();
 	f->b_ind = 0;
 	f->fd = (f->st) ? (uint32_t)open("./del", O_RDONLY) : (f->fd);
 }
@@ -75,7 +75,7 @@ void				ft_md5(t_flags *f)
 	{
 		buf[f->ret] = '\0';
 		(f->fd == 0 && !f->is_ne) ? (ft_printf("%s", buf)) : (0);
-		f->M = (uint32_t*)buf;
+		f->mm = (uint32_t*)buf;
 		md5_hash(f);
 		help_me2(f);
 		f->orig_len += 512;
@@ -84,7 +84,7 @@ void				ft_md5(t_flags *f)
 	(f->ret > 0) ? (ft_pad(buf, f)) : (0);
 	while (f->i < f->ret)
 	{
-		f->M = (uint32_t*)&buf[f->i];
+		f->mm = (uint32_t*)&buf[f->i];
 		md5_hash(f);
 		help_me2(f);
 		f->i += 64;

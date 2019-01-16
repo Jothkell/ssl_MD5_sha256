@@ -6,7 +6,7 @@
 /*   By: jkellehe <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/12/09 17:14:19 by jkellehe          #+#    #+#             */
-/*   Updated: 2019/01/15 23:51:08 by jkellehe         ###   ########.fr       */
+/*   Updated: 2019/01/16 14:14:19 by jkellehe         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,8 +16,10 @@ int				optns(t_flags *f, char **argv)
 {
 	const char	*op[] = {"md5", "sha256", "sha224",
 		"sha512", "sha384", NULL};
-	const void	(*fun[]) (t_flags *f) = {ft_md5, sha_256, sha_256, sha_512,
-		sha_512, NULL};
+	const void	(*fun[]) (t_flags *f) = {(const void(*)(t_flags *))ft_md5,
+		(const void(*)(t_flags *))sha_256, (const void(*)(t_flags *))sha_256,
+		(const void(*)(t_flags *))sha_512,
+		(const void(*)(t_flags *))sha_512, NULL};
 	int			j;
 
 	j = 0;
@@ -25,9 +27,9 @@ int				optns(t_flags *f, char **argv)
 	{
 		if (ft_strcmp(op[j], argv[f->i]) == 0)
 		{
-			f->algy = op[j];
+			f->algy = (char*)op[j];
 			f->det = j;
-			f->alg = fun[j];
+			f->alg = (void (*)(t_flags *))fun[j];
 			return (1);
 		}
 		j++;
@@ -35,30 +37,31 @@ int				optns(t_flags *f, char **argv)
 	return (0);
 }
 
-void			parse(t_flags *f, char **argv, void (**op) (t_flags *f, char **argv))
+void			parse(t_flags *f, char **a, void (**op) (t_flags *f, char **a))
 {
-	while(argv[f->i] != NULL)
+	while (a[f->i] != NULL)
 	{
 		f->hold = f->i;
-		if (argv[f->i][0] == '-')
-			op[(argv[f->i][1])](f, argv);
-		else if (!optns(f, argv))
+		if (a[f->i][0] == '-')
+			op[(a[f->i][1])](f, a);
+		else if (!optns(f, a))
 		{
-			if (0 <= (f->fd = open(argv[f->i], O_RDONLY)) && !(f->i = 0))
-			{		
-				f->name = argv[f->hold];
+			if (0 <= (f->fd = open(a[f->i], O_RDONLY)))
+			{
+				f->i = 0;
+				f->name = a[f->hold];
 				f->never = 0;
 				f->alg(f);
 			}
 			else
-				ft_printf("%s: No such file or directory\n", argv[f->i]);
+				ft_printf("%s: No such file or directory\n", a[f->i]);
 			f->i = f->hold;
-			while(argv[++f->i] != NULL)
-				ft_printf("%s: No such file or directory\n", argv[f->i]);
+			while (a[++f->i] != NULL)
+				ft_printf("%s: No such file or directory\n", a[f->i]);
 			return ;
 		}
 		f->i = f->hold + 1;
 	}
 	if (f->never && f->alg != ft_err && (f->is_ne = 1))
-		ft_stdin(f, argv);
+		ft_stdin(f, a);
 }

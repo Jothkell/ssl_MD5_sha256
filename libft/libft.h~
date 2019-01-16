@@ -6,7 +6,7 @@
 /*   By: jkellehe <jkellehe@student.42.us.or>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/06/19 18:53:47 by jkellehe          #+#    #+#             */
-/*   Updated: 2019/01/16 14:10:58 by jkellehe         ###   ########.fr       */
+/*   Updated: 2018/07/06 18:24:42 by jkellehe         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -84,6 +84,6 @@ int					ft_strcmp(const char *s1, const char *s2);
 char				*ft_strncat(char *s1, const char *s2, size_t n);
 int					ft_strncmp(const char *s1, const char *s2, size_t n);
 char				*ft_strncpy(char *dst, const char *src, size_t len);
-int					ft_printf(const char *restrict format, ...);
+int                             ft_printf(const char *restrict format, ...);
 
 #endif

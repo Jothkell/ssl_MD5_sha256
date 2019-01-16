@@ -77,7 +77,6 @@ void			ft_pad(char *buf, t_flags *f)
 	{
 		buf[f->ret] = 0;
 		f->ret++;
-		debug++;
 	}
 	if (f->b_ind == 1)
 		b_ind(hold, buf, f);
